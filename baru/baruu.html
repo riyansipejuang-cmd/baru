@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Peminjaman Fasilitas Kampus - Portal Wakil Rektor</title>
+    <style>
+        :root {
+            --primary: #0f2c59;
+            --secondary: #1a4b8c;
+            --accent: #ff8c00;
+            --bg-light: #f8fafc;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Navbar Profesional dengan Logo Bulat Oranye & WR */
+        .navbar {
+            background: var(--primary);
+            color: white;
+            padding: 14px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #ffa500 0%, #ff7700 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(255, 140, 0, 0.3),
+                        inset 0 2px 5px rgba(255, 255, 255, 0.4);
+            border: 2px solid #ffffff;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .navbar nav a {
+            color: #cbd5e1;
+            text-decoration: none;
+            margin-left: 24px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .navbar nav a:hover {
+            color: white;
+        }
+
+        /* Hero Section Profesional dengan Slideshow & Teks */
+        .hero {
+            position: relative;
+            color: white;
+            text-align: center;
+            height: 260px;
+            overflow: hidden;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+            z-index: 1;
+        }
+
+        .hero-slide.active {
+            opacity: 1;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(15, 44, 89, 0.8), rgba(10, 30, 60, 0.9));
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        .hero-content h1 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-content p {
+            font-size: 14px;
+            font-weight: 400;
+            color: #e2e8f0;
+            letter-spacing: 0.3px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Container Utama */
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: var(--radius);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            flex: 1;
+            width: 92%;
+        }
+
+        .container h2 {
+            margin-bottom: 8px;
+            color: var(--primary);
+            font-size: 20px;
+            font-weight: 700;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 8px;
+        }
+
+        .section-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .page-section {
+            display: none;
+        }
+
+        .page-section.active-page {
+            display: block;
+        }
+
+        /* Grid Pilihan WR */
+        .wr-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .wr-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .wr-card:hover {
+            border-color: var(--secondary);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(15, 44, 89, 0.08);
+        }
+
+        .wr-card h3 {
+            color: var(--primary);
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .wr-card p {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .btn-pilih {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            font-size: 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-pilih:hover {
+            background: var(--secondary);
+        }
+
+        /* Prosedur Box */
+        #prosedur-wrapper {
+            display: none;
+            margin-top: 20px;
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+        }
+
+        .prosedur-box h3 {
+            color: var(--primary);
+            margin-bottom: 12px;
+            font-size: 17px;
+        }
+
+        .prosedur-box ul {
+            margin-left: 20px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: var(--text-dark);
+        }
+
+        .prosedur-box li {
+            margin-bottom: 8px;
+        }
+
+        .btn-aksi-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .btn-lanjut {
+            background: #16a34a;
+            color: white;
+            border: none;
+            padding: 9px 16px;
+            font-size: 13px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-lanjut:hover {
+            background: #15803d;
+        }
+
+        .back-prosedur {
+            background: #64748b;
+            color: white;
+            border: none;
+            padding: 9px 16px;
+            font-size: 13px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .back-prosedur:hover {
+            background: #475569;
+        }
+
+        /* Form Styling */
+        #form-wrapper {
+            display: none;
+            margin-top: 20px;
+            border-top: 1px dashed var(--border);
+            padding-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text-dark);
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+            background-color: #fff;
+            color: var(--text-dark);
+            transition: border-color 0.2s;
+        }
+
+        .form-group input[type="file"] {
+            padding: 8px;
+            background: var(--bg-light);
+            cursor: pointer;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(26, 75, 140, 0.1);
+        }
+
+        .multi-wr-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+            background: var(--bg-light);
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin-top: 6px;
+        }
+
+        .multi-wr-container label {
+            font-weight: normal;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        button[type="submit"] {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+
+        button[type="submit"]:hover {
+            background: #e07b00;
+        }
+
+        /* Profil Pimpinan Grid */
+        .profil-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .profil-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .profil-foto {
+            width: 75px;
+            height: 90px;
+            background-color: #cbd5e1;
+            border-radius: 6px;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 1px solid var(--primary);
+        }
+
+        .profil-info h3 {
+            font-size: 14px;
+            color: var(--primary);
+            margin-bottom: 2px;
+            font-weight: 700;
+        }
+
+        .profil-info .jabatan {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .profil-info p {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        /* Tabel & Toolbar */
+        .table-toolbar {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .table-toolbar input, .table-toolbar select {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .table-toolbar input {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        tr:nth-child(even) {
+            background-color: var(--bg-light);
+        }
+
+        tr:hover {
+            background-color: #f1f5f9;
+        }
+
+        .badge-wr {
+            background-color: var(--primary);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .badge-acc {
+            background-color: #16a34a;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .pagination-buttons button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            margin-left: 6px;
+            transition: background 0.2s;
+        }
+
+        .pagination-buttons button:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        /* Footer Profesional */
+        footer {
+            background-color: #0b1f3f;
+            color: #cbd5e1;
+            padding: 24px 20px;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .footer-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: 0.3px;
+        }
+
+        .footer-info {
+            font-size: 12px;
+            line-height: 1.5;
+            color: #94a3b8;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 10px;
+            font-size: 11px;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo-container">
+            <div class="logo-icon">WR</div>
+            <div class="logo">PORTAL<span>WR</span></div>
+        </div>
+        <nav>
+            <a onclick="gantiHalaman('profil-page')">Profil Pimpinan</a>
+            <a onclick="gantiHalaman('form-page')">Ajukan Peminjaman</a>
+            <a onclick="gantiHalaman('status-page')">Daftar Status ACC</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section Profesional -->
+    <section class="hero">
+        <div class="hero-slide active" style="background-image: url('oke.jpg');"></div>
+        <div class="hero-slide" style="background-image: url('oke1.jpg');"></div>
+        <div class="hero-slide" style="background-image: url('oke2.jpg');"></div>
+        <div class="hero-slide" style="background-image: url('oke3.jpg');"></div>
+        
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>Layanan Pengajuan Peminjaman Fasilitas Kampus</h1>
+            <p>Sistem Terpadu Bidang Wakil Rektor 1, 2, 3, dan 4</p>
+        </div>
+    </section>
+
+    <!-- HALAMAN PROFIL -->
+    <div id="profil-page" class="container page-section active-page">
+        <h2>Profil & Biografi Pimpinan Wakil Rektor</h2>
+        <p class="section-desc">Kenali jajaran pimpinan universitas yang membawahi bidang akademik, aset, kemahasiswaan, dan kerja sama:</p>
+
+        <div class="profil-grid">
+            <div class="profil-card">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="WR 1" class="profil-foto">
+                <div class="profil-info">
+                    <h3>Mukhlas Triono, M.Pd.</h3>
+                    <div class="jabatan">Wakil Rektor Bidang Akademik (WR 1)</div>
+                    <p><b>Fokus Utama:</b> Kurikulum, Sistem Pembelajaran, Riset, & Laboratorium Terpadu.</p>
+                </div>
+            </div>
+
+            <div class="profil-card">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80" alt="WR 2" class="profil-foto">
+                <div class="profil-info">
+                    <h3>Surya Putra Raharja, M.Pd.</h3>
+                    <div class="jabatan">Wakil Rektor Bidang Aset & Keuangan (WR 2)</div>
+                    <p><b>Fokus Utama:</b> Manajemen Aset, Gedung Serbaguna, & Infrastruktur Kampus.</p>
+                </div>
+            </div>
+
+            <div class="profil-card">
+                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80" alt="WR 3" class="profil-foto">
+                <div class="profil-info">
+                    <h3>Aldilla Yulia Sutikno, M.Pd</h3>
+                    <div class="jabatan">Wakil Rektor Bidang Kemahasiswaan (WR 3)</div>
+                    <p><b>Fokus Utama:</b> Pembinaan Organisasi Mahasiswa, UKM, & Prestasi Akademik/Non-Akademik.</p>
+                </div>
+            </div>
+
+            <div class="profil-card">
+                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&q=80" alt="WR 4" class="profil-foto">
+                <div class="profil-info">
+                    <h3>Jusmin, M.Ec.Dev</h3>
+                    <div class="jabatan">Wakil Rektor Bidang Kerjasama & SDM (WR 4)</div>
+                    <p><b>Fokus Utama:</b> Kemitraan Strategis, Hubungan Industri, & Layanan Tamu Instansi.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HALAMAN FORMULIR & PROSEDUR -->
+    <div id="form-page" class="container page-section">
+        <h2>Pilih Prosedur & Bidang Tujuan Peminjaman</h2>
+        <p class="section-desc">Silakan pilih bidang Wakil Rektor utama untuk melihat panduan dan prosedur peminjaman:</p>
+        
+        <div class="wr-grid">
+            <div class="wr-card" onclick="tampilkanProsedur('wr1')">
+                <h3>WR 1 (Akademik)</h3>
+                <p>Laboratorium, Ruang Kuliah Khusus, & Fasilitas Pembelajaran.</p>
+                <button class="btn-pilih">Lihat Prosedur</button>
+            </div>
+            <div class="wr-card" onclick="tampilkanProsedur('wr2')">
+                <h3>WR 2 (Aset)</h3>
+                <p>Gedung Serbaguna, Aula Utama, & Inventaris Kampus.</p>
+                <button class="btn-pilih">Lihat Prosedur</button>
+            </div>
+            <div class="wr-card" onclick="tampilkanProsedur('wr3')">
+                <h3>WR 3 (Kemahasiswaan)</h3>
+                <p>Fasilitas Sekretariat Ormawa, UKM, & Kegiatan Mahasiswa.</p>
+                <button class="btn-pilih">Lihat Prosedur</button>
+            </div>
+            <div class="wr-card" onclick="tampilkanProsedur('wr4')">
+                <h3>WR 4 (SDM)</h3>
+                <p>Ruang Rapat Eksekutif & Aula Kerjasama Mitra.</p>
+                <button class="btn-pilih">Lihat Prosedur</button>
+            </div>
+        </div>
+
+        <div id="prosedur-wrapper">
+            <div class="prosedur-box">
+                <h3 id="prosedur-title">Panduan & Prosedur Peminjaman</h3>
+                <div id="prosedur-content"></div>
+                <div class="btn-aksi-group">
+                    <button type="button" class="back-prosedur" onclick="kembaliKePilihanWR()">← Kembali</button>
+                    <button type="button" class="btn-lanjut" onclick="lanjutKeForm()">Lanjutkan ke Formulir →</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="form-wrapper">
+            <button type="button" class="back-prosedur" onclick="kembaliKeProsedur()" style="margin-bottom: 16px;">← Kembali ke Panduan</button>
+            <h3 id="form-title" style="color: var(--primary); margin-bottom: 16px; font-size: 16px; font-weight: 700;">Formulir Pengajuan</h3>
+            
+            <form id="peminjamanForm">
+                <div class="form-group">
+                    <label>Nama Lengkap Peminjam:</label>
+                    <input type="text" id="nama" required placeholder="Masukkan nama lengkap beserta gelar jika ada">
+                </div>
+
+                <div class="form-group">
+                    <label>Nomor Induk (NIM / NIP):</label>
+                    <input type="text" id="nim" required placeholder="Contoh: 210102001">
+                </div>
+
+                <div class="form-group">
+                    <label>Asal Organisasi / Unit / Fakultas:</label>
+                    <input type="text" id="unit" required placeholder="Contoh: BEM Fakultas Teknik">
+                </div>
+
+                <div class="form-group">
+                    <label>Nama Fasilitas yang Dipinjam:</label>
+                    <input type="text" id="fasilitas" required placeholder="Contoh: Gedung Serbaguna / Lab Komputer">
+                </div>
+
+                <div class="form-group">
+                    <label>Tanggal Mulai Penggunaan:</label>
+                    <input type="date" id="tglMulai" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Tanggal Selesai Penggunaan:</label>
+                    <input type="date" id="tglSelesai" required>
+                </div>
+
+                <!-- Input Upload File di bawah Tanggal Selesai -->
+                <div class="form-group">
+                    <label>Upload Dokumen / Proposal Pendukung (PDF / Gambar):</label>
+                    <input type="file" id="berkasPendukung" accept=".pdf, .jpg, .jpeg, .png">
+                    <small style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 4px;">Format yang didukung: PDF, JPG, PNG (Maks. 5MB)</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Keperluan / Deskripsi Kegiatan:</label>
+                    <input type="text" id="keperluan" required placeholder="Contoh: Seminar Nasional Teknologi Informasi">
+                </div>
+
+                <input type="hidden" id="tujuan">
+
+                <div class="form-group">
+                    <label>Persetujuan Tambahan (Multi-Approval Lintas Pimpinan):</label>
+                    <span style="font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 6px;">Centang bidang pimpinan lain yang juga perlu memberikan paraf atau verifikasi:</span>
+                    <div class="multi-wr-container">
+                        <label><input type="checkbox" name="multiApproval" value="WR 1"> WR 1 (Akademik)</label>
+                        <label><input type="checkbox" name="multiApproval" value="WR 2"> WR 2 (Aset)</label>
+                        <label><input type="checkbox" name="multiApproval" value="WR 3"> WR 3 (Kemahasiswaan)</label>
+                        <label><input type="checkbox" name="multiApproval" value="WR 4"> WR 4 (SDM/Kerjasama)</label>
+                    </div>
+                </div>
+
+                <button type="submit" id="submitBtn">Kirim Pengajuan Resmi</button>
+            </form>
+            <p id="responseMessage" style="margin-top: 12px; font-weight: 600; text-align: center; font-size: 13px;"></p>
+        </div>
+    </div>
+
+    <!-- HALAMAN DAFTAR STATUS ACC -->
+    <div id="status-page" class="container page-section">
+        <h2>Daftar Status Pengajuan & Persetujuan (Multi-Approval)</h2>
+        <p class="section-desc">Pantau status verifikasi, paraf, dan persetujuan dari masing-masing bidang pimpinan:</p>
+        
+        <div class="table-toolbar">
+            <input type="text" id="searchInput" placeholder="Cari berdasarkan peminjam, unit, atau fasilitas..." onkeyup="filterData()">
+            <select id="filterWR" onchange="filterData()">
+                <option value="">Semua Bidang Utama</option>
+                <option value="WR 1">WR 1 (Akademik)</option>
+                <option value="WR 2">WR 2 (Aset)</option>
+                <option value="WR 3">WR 3 (Kemahasiswaan)</option>
+                <option value="WR 4">WR 4 (SDM)</option>
+            </select>
+        </div>
+
+        <div class="table-responsive">
+            <table id="tabelAcc">
+                <thead>
+                    <tr>
+                        <th>Fasilitas & Kegiatan</th>
+                        <th>Peminjam (Unit)</th>
+                        <th>Durasi Tanggal</th>
+                        <th>Bidang Utama</th>
+                        <th>Status Multi-Approval</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr>
+                        <td colspan="5" style="text-align: center;">Memuat data...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination">
+            <span id="pageInfo">Menampilkan 0 dari 0 data</span>
+            <div class="pagination-buttons">
+                <button id="prevBtn" onclick="ubahHalaman(-1)">Sebelumnya</button>
+                <button id="nextBtn" onclick="ubahHalaman(1)">Selanjutnya</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-top">
+                <div class="footer-title">Portal Wakil Rektor - Sistem Peminjaman Terpadu</div>
+            </div>
+            <div class="footer-info">
+                Jl. KH. Ahmad Dahlan No.01, Mariyat Pantai, Aimas, Kabupaten Sorong, Papua Barat - 98418 | Email: info@unimudasorong.ac.id
+            </div>
+            <div class="footer-bottom">
+                &copy; 2026 Universitas Muhammadiyah Sorong. Hak cipta dilindungi undang-undang.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxQ15Pa92Grcsdni0Eyr95s4OeZ5GuE_R5xJX_jQ7HpEU61Zc74o1vA4PLBDutR4lfnyA/exec";
+        let selectedWR = "";
+        
+        let semuaDataFasilitas = [];
+        let dataTersaring = [];
+        let halamanAktif = 1;
+        const barisPerHalaman = 5;
+
+        function gantiHalaman(pageId) {
+            document.querySelectorAll('.page-section').forEach(page => {
+                page.classList.remove('active-page');
+            });
+            document.getElementById(pageId).classList.add('active-page');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if(pageId === 'status-page') {
+                loadDaftarAcc();
+            }
+        }
+
+        // Slideshow Background Otomatis
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.hero-slide');
+
+        function nextSlide() {
+            if (slides.length > 0) {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }
+        }
+        setInterval(nextSlide, 4500);
+
+        const dataProsedur = {
+            wr1: {
+                title: "Panduan Prosedur Peminjaman - WR 1 (Bidang Akademik)",
+                html: `<ul>
+                    <li><b>Cakupan Fasilitas:</b> Laboratorium komputer, ruang kuliah terpadu, dan fasilitas pendukung pembelajaran.</li>
+                    <li><b>Ketentuan Waktu:</b> Pengajuan dokumen wajib dikirimkan minimal 3 hari kerja sebelum pelaksanaan kegiatan.</li>
+                    <li><b>Catatan Multi-Approval:</b> Jika kegiatan melibatkan aset gedung besar atau Ormawa, centang juga persetujuan pimpinan terkait di bawah form.</li>
+                </ul>`
+            },
+            wr2: {
+                title: "Panduan Prosedur Peminjaman - WR 2 (Bidang Aset & Keuangan)",
+                html: `<ul>
+                    <li><b>Cakupan Fasilitas:</b> Gedung Serbaguna (GSG), Aula Utama, dan inventaris fasilitas universitas.</li>
+                    <li><b>Ketentuan Waktu:</b> Peminjam wajib bertanggung jawab penuh atas kebersihan, ketertiban, dan keutuhan aset.</li>
+                    <li><b>Catatan Multi-Approval:</b> Penggunaan fasilitas skala besar memerlukan verifikasi silang dari biro keuangan atau aset.</li>
+                </ul>`
+            },
+            wr3: {
+                title: "Panduan Prosedur Peminjaman - WR 3 (Bidang Kemahasiswaan)",
+                html: `<ul>
+                    <li><b>Cakupan Fasilitas:</b> Ruang sekretariat bersama, fasilitas UKM, dan area publik kampus.</li>
+                    <li><b>Ketentuan Waktu:</b> Khusus diperuntukkan bagi kegiatan resmi organisasi kemahasiswaan (BEM/DPM/UKM).</li>
+                    <li><b>Catatan Multi-Approval:</b> Wajib berkoordinasi dengan biro kemahasiswaan serta pengelola sarana prasarana.</li>
+                </ul>`
+            },
+            wr4: {
+                title: "Panduan Prosedur Peminjaman - WR 4 (Bidang SDM & Kerjasama)",
+                html: `<ul>
+                    <li><b>Cakupan Fasilitas:</b> Ruang rapat eksekutif, ruang sidang senat, dan fasilitas tamu VIP instansi.</li>
+                    <li><b>Ketentuan Waktu:</b> Diperuntukkan bagi kegiatan partnership, instansi luar, atau agenda strategis universitas.</li>
+                    <li><b>Catatan Multi-Approval:</b> Memerlukan koordinasi administratif lintas biro dan kehumasan.</li>
+                </ul>`
+            }
+        };
+
+        function tampilkanProsedur(jenisWR) {
+            selectedWR = jenisWR;
+            const grid = document.querySelector('.wr-grid');
+            const prosedurWrapper = document.getElementById('prosedur-wrapper');
+            const titleEl = document.getElementById('prosedur-title');
+            const contentEl = document.getElementById('prosedur-content');
+
+            grid.style.display = 'none';
+            prosedurWrapper.style.display = 'block';
+
+            titleEl.innerText = dataProsedur[jenisWR].title;
+            contentEl.innerHTML = dataProsedur[jenisWR].html;
+            document.getElementById('tujuan').value = jenisWR;
+        }
+
+        function kembaliKePilihanWR() {
+            const grid = document.querySelector('.wr-grid');
+            const prosedurWrapper = document.getElementById('prosedur-wrapper');
+            prosedurWrapper.style.display = 'none';
+            grid.style.display = 'grid';
+        }
+
+        function lanjutKeForm() {
+            const prosedurWrapper = document.getElementById('prosedur-wrapper');
+            const formWrapper = document.getElementById('form-wrapper');
+            const formTitle = document.getElementById('form-title');
+
+            prosedurWrapper.style.display = 'none';
+            formWrapper.style.display = 'block';
+
+            let namaWrText = "";
+            if(selectedWR === 'wr1') namaWrText = "WR 1 - Bidang Akademik";
+            else if(selectedWR === 'wr2') namaWrText = "WR 2 - Bidang Aset & Keuangan";
+            else if(selectedWR === 'wr3') namaWrText = "WR 3 - Bidang Kemahasiswaan";
+            else if(selectedWR === 'wr4') namaWrText = "WR 4 - Bidang SDM & Kerjasama";
+
+            formTitle.innerText = "Formulir Pengajuan Utama: " + namaWrText;
+        }
+
+        function kembaliKeProsedur() {
+            const formWrapper = document.getElementById('form-wrapper');
+            const prosedurWrapper = document.getElementById('prosedur-wrapper');
+            formWrapper.style.display = 'none';
+            prosedurWrapper.style.display = 'block';
+        }
+
+        const form = document.getElementById('peminjamanForm');
+        const responseMessage = document.getElementById('responseMessage');
+        const submitBtn = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Mengirim Pengajuan...";
+            responseMessage.style.color = "var(--primary)";
+            responseMessage.innerText = "Menghubungkan ke server sistem...";
+
+            const checkboxes = document.querySelectorAll('input[name="multiApproval"]:checked');
+            let multiApprovalList = [];
+            checkboxes.forEach((cb) => {
+                multiApprovalList.push(cb.value);
+            });
+
+            const fileInput = document.getElementById('berkasPendukung');
+            
+            var formData = {
+                nama: document.getElementById('nama').value,
+                nim: document.getElementById('nim').value,
+                unit: document.getElementById('unit').value,
+                fasilitas: document.getElementById('fasilitas').value,
+                tglMulai: document.getElementById('tglMulai').value,
+                tglSelesai: document.getElementById('tglSelesai').value,
+                namaFile: fileInput.files.length > 0 ? fileInput.files[0].name : "Tidak ada file",
+                keperluan: document.getElementById('keperluan').value,
+                tujuan: document.getElementById('tujuan').value,
+                multiApproval: multiApprovalList.join(", ")
+            };
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.status === "success") {
+                    responseMessage.style.color = "#16a34a";
+                    responseMessage.innerText = "Pengajuan berhasil dikirim dan masuk dalam antrean verifikasi.";
+                    form.reset();
+                } else {
+                    responseMessage.style.color = "#dc2626";
+                    responseMessage.innerText = "Gagal memproses: " + data.message;
+                }
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Kirim Pengajuan Resmi";
+            })
+            .catch(error => {
+                responseMessage.style.color = "#dc2626";
+                responseMessage.innerText = "Gagal terhubung ke jaringan server.";
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Kirim Pengajuan Resmi";
+            });
+        });
+
+        function loadDaftarAcc() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center;">Memuat data status...</td></tr>`;
+
+            fetch(SCRIPT_URL)
+            .then(response => response.json())
+            .then(data => {
+                semuaDataFasilitas = Array.isArray(data) ? data : [];
+                filterData();
+            })
+            .catch(error => {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #dc2626;">Gagal memuat data dari server.</td></tr>`;
+            });
+        }
+
+        function filterData() {
+            const keyword = document.getElementById('searchInput').value.toLowerCase();
+            const selectedFilter = document.getElementById('filterWR').value;
+
+            dataTersaring = semuaDataFasilitas.filter(item => {
+                const matchKeyword = 
+                    item.fasilitas.toLowerCase().includes(keyword) ||
+                    item.nama.toLowerCase().includes(keyword) ||
+                    item.unit.toLowerCase().includes(keyword) ||
+                    item.keperluan.toLowerCase().includes(keyword);
+
+                const matchWR = selectedFilter === "" || item.bidangWR.includes(selectedFilter);
+                return matchKeyword && matchWR;
+            });
+
+            halamanAktif = 1;
+            tampilkanTabel();
+        }
+
+        function tampilkanTabel() {
+            const tbody = document.getElementById('tableBody');
+            const pageInfo = document.getElementById('pageInfo');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            tbody.innerHTML = "";
+
+            if(dataTersaring.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center;">Tidak ada data pengajuan ditemukan.</td></tr>`;
+                pageInfo.innerText = "Menampilkan 0 dari 0 data";
+                prevBtn.disabled = true;
+                nextBtn.disabled = true;
+                return;
+            }
+
+            const totalData = dataTersaring.length;
+            const totalHalaman = Math.ceil(totalData / barisPerHalaman);
+
+            if(halamanAktif > totalHalaman) halamanAktif = totalHalaman;
+            if(halamanAktif < 1) halamanAktif = 1;
+
+            const awal = (halamanAktif - 1) * barisPerHalaman;
+            const akhir = Math.min(awal + barisPerHalaman, totalData);
+            const dataHalamanIni = dataTersaring.slice(awal, akhir);
+
+            dataHalamanIni.forEach(item => {
+                let statusHtml = `<span class="badge-acc">Disetujui Utama (${item.bidangWR})</span>`;
+                if(item.multiApproval && item.multiApproval.trim() !== "") {
+                    statusHtml += `<br><small style="color:var(--text-muted); margin-top:3px; display:inline-block;">+ Paraf Tambahan: <b>${item.multiApproval}</b></small>`;
+                }
+
+                var tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><b>${item.fasilitas}</b><br><small style="color:var(--text-muted);">${item.keperluan}</small></td>
+                    <td>${item.nama}<br><small style="color:var(--text-muted);">(${item.unit})</small></td>
+                    <td>${item.tglMulai} s/d ${item.tglSelesai}</td>
+                    <td><span class="badge-wr">${item.bidangWR}</span></td>
+                    <td>${statusHtml}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            pageInfo.innerText = `Menampilkan ${awal + 1}-${akhir} dari ${totalData} data (Halaman ${halamanAktif}/${totalHalaman})`;
+            prevBtn.disabled = halamanAktif === 1;
+            nextBtn.disabled = halamanAktif === totalHalaman;
+        }
+
+        function ubahHalaman(arah) {
+            halamanAktif += arah;
+            tampilkanTabel();
+        }
+    </script>
+</body>
+</html>
