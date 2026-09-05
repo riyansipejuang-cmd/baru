@@ -823,7 +823,7 @@
     </footer>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxQ15Pa92Grcsdni0Eyr95s4OeZ5GuE_R5xJX_jQ7HpEU61Zc74o1vA4PLBDutR4lfnyA/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwY2TM_JzMBaS4rrcqlVsS_6EHjpORINyuvDjRXslx66BoRgC0TP6uc_9Bl2LAENTVDsw/exec";
         let selectedWR = "";
         
         let semuaDataFasilitas = [];
@@ -937,63 +937,83 @@
             prosedurWrapper.style.display = 'block';
         }
 
-        const form = document.getElementById('peminjamanForm');
+		const form = document.getElementById('peminjamanForm');
         const responseMessage = document.getElementById('responseMessage');
         const submitBtn = document.getElementById('submitBtn');
 
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             submitBtn.disabled = true;
-            submitBtn.innerText = "Mengirim Pengajuan...";
+            submitBtn.innerText = "Mengunggah Berkas & Mengirim...";
             responseMessage.style.color = "var(--primary)";
-            responseMessage.innerText = "Menghubungkan ke server sistem...";
-
-            const checkboxes = document.querySelectorAll('input[name="multiApproval"]:checked');
-            let multiApprovalList = [];
-            checkboxes.forEach((cb) => {
-                multiApprovalList.push(cb.value);
-            });
+            responseMessage.innerText = "Memproses data dan file...";
 
             const fileInput = document.getElementById('berkasPendukung');
-            
-            var formData = {
-                nama: document.getElementById('nama').value,
-                nim: document.getElementById('nim').value,
-                unit: document.getElementById('unit').value,
-                fasilitas: document.getElementById('fasilitas').value,
-                tglMulai: document.getElementById('tglMulai').value,
-                tglSelesai: document.getElementById('tglSelesai').value,
-                namaFile: fileInput.files.length > 0 ? fileInput.files[0].name : "Tidak ada file",
-                keperluan: document.getElementById('keperluan').value,
-                tujuan: document.getElementById('tujuan').value,
-                multiApproval: multiApprovalList.join(", ")
-            };
+            const file = fileInput.files[0];
 
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify(formData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if(data.status === "success") {
-                    responseMessage.style.color = "#16a34a";
-                    responseMessage.innerText = "Pengajuan berhasil dikirim dan masuk dalam antrean verifikasi.";
-                    form.reset();
-                } else {
+            function kirimData(fileData = null, fileName = null, fileMimeType = null) {
+                const checkboxes = document.querySelectorAll('input[name="multiApproval"]:checked');
+                let multiApprovalList = [];
+                checkboxes.forEach((cb) => multiApprovalList.push(cb.value));
+
+                var formData = {
+                    nama: document.getElementById('nama').value,
+                    nim: document.getElementById('nim').value,
+                    unit: document.getElementById('unit').value,
+                    fasilitas: document.getElementById('fasilitas').value,
+                    tglMulai: document.getElementById('tglMulai').value,
+                    tglSelesai: document.getElementById('tglSelesai').value,
+                    keperluan: document.getElementById('keperluan').value,
+                    tujuan: document.getElementById('tujuan').value,
+                    multiApproval: multiApprovalList.join(", "),
+                    fileData: fileData,
+                    fileName: fileName,
+                    fileMimeType: fileMimeType
+                };
+
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(formData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.result === "success") {
+                        responseMessage.style.color = "#16a34a";
+                        responseMessage.innerText = "Pengajuan & berkas berhasil dikirim!";
+                        form.reset();
+                    } else {
+                        responseMessage.style.color = "#dc2626";
+                        responseMessage.innerText = "Gagal: " + data.message;
+                    }
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "Kirim Pengajuan Resmi";
+                })
+                .catch(error => {
                     responseMessage.style.color = "#dc2626";
-                    responseMessage.innerText = "Gagal memproses: " + data.message;
-                }
-                submitBtn.disabled = false;
-                submitBtn.innerText = "Kirim Pengajuan Resmi";
-            })
-            .catch(error => {
-                responseMessage.style.color = "#dc2626";
-                responseMessage.innerText = "Gagal terhubung ke jaringan server.";
-                submitBtn.disabled = false;
-                submitBtn.innerText = "Kirim Pengajuan Resmi";
-            });
-        });
+                    responseMessage.innerText = "Terjadi kesalahan jaringan.";
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "Kirim Pengajuan Resmi";
+                });
+            }
 
+            // Jika ada file yang di-upload, baca dulu menggunakan FileReader
+            if (file) {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function () {
+                    kirimData(reader.result, file.name, file.type);
+                };
+                reader.onerror = function (error) {
+                    console.error("Gagal membaca file: ", error);
+                    alert("Gagal memproses file.");
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "Kirim Pengajuan Resmi";
+                };
+            } else {
+                kirimData(); // Kirim tanpa file jika kosong
+            }
+        });
+		
         function loadDaftarAcc() {
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = `<tr><td colspan="5" style="text-align: center;">Memuat data status...</td></tr>`;
