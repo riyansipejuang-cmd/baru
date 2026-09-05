@@ -823,7 +823,7 @@
     </footer>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxs-OA0Ihm4xqfx7poyjjZatTuWYsHbbEb3adUz90G2A3fwXdXmwe07RrqsjQyQO0nVSw/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwONiIyfZS84--gWyre5do2nBGso6CT5FKC1Km7jyiE1JlFEO_-E_Dddui9E9HnO8uADw/exec";
         let selectedWR = "";
         
         let semuaDataFasilitas = [];
@@ -952,48 +952,49 @@
             const file = fileInput.files[0];
 
             function kirimData(fileData = null, fileName = null, fileMimeType = null) {
-                const checkboxes = document.querySelectorAll('input[name="multiApproval"]:checked');
-                let multiApprovalList = [];
-                checkboxes.forEach((cb) => multiApprovalList.push(cb.value));
+               const checkboxes = document.querySelectorAll('input[name="multiApproval"]:checked');
+            let multiApprovalList = [];
+            checkboxes.forEach((cb) => multiApprovalList.push(cb.value));
 
-                var formData = {
-                    nama: document.getElementById('nama').value,
-                    nim: document.getElementById('nim').value,
-                    unit: document.getElementById('unit').value,
-                    fasilitas: document.getElementById('fasilitas').value,
-                    tglMulai: document.getElementById('tglMulai').value,
-                    tglSelesai: document.getElementById('tglSelesai').value,
-                    keperluan: document.getElementById('keperluan').value,
-                    tujuan: document.getElementById('tujuan').value,
-                    multiApproval: multiApprovalList.join(", "),
-                    fileData: fileData,
-                    fileName: fileName,
-                    fileMimeType: fileMimeType
-                };
+            var formData = {
+                nama: document.getElementById('nama').value,
+                nim: document.getElementById('nim').value,
+                unit: document.getElementById('unit').value,
+                fasilitas: document.getElementById('fasilitas').value,
+                tglMulai: document.getElementById('tglMulai').value,
+                tglSelesai: document.getElementById('tglSelesai').value,
+                keperluan: document.getElementById('keperluan').value,
+                tujuan: document.getElementById('tujuan').value,
+                multiApproval: multiApprovalList.join(", "),
+                fileData: fileData,
+                fileName: fileName,
+                fileMimeType: fileMimeType
+            };
 
-                fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(formData)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if(data.result === "success") {
-                        responseMessage.style.color = "#16a34a";
-                        responseMessage.innerText = "Pengajuan & berkas berhasil dikirim!";
-                        form.reset();
-                    } else {
-                        responseMessage.style.color = "#dc2626";
-                        responseMessage.innerText = "Gagal: " + data.message;
-                    }
-                    submitBtn.disabled = false;
-                    submitBtn.innerText = "Kirim Pengajuan Resmi";
-                })
-                .catch(error => {
+            // Gunakan pendekatan tanpa mode 'no-cors' agar respons dari Apps Script bisa dibaca
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if(result.result === "success") {
+                    responseMessage.style.color = "#16a34a";
+                    responseMessage.innerText = "Pengajuan & berkas berhasil dikirim!";
+                    form.reset();
+                } else {
                     responseMessage.style.color = "#dc2626";
-                    responseMessage.innerText = "Terjadi kesalahan jaringan.";
-                    submitBtn.disabled = false;
-                    submitBtn.innerText = "Kirim Pengajuan Resmi";
-                });
+                    responseMessage.innerText = "Gagal dari Server: " + result.message;
+                }
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Kirim Pengajuan Resmi";
+            })
+            .catch(error => {
+                responseMessage.style.color = "#dc2626";
+                responseMessage.innerText = "Terjadi kesalahan jaringan atau izin Script.";
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Kirim Pengajuan Resmi";
+            });
             }
 
             // Jika ada file yang di-upload, baca dulu menggunakan FileReader
