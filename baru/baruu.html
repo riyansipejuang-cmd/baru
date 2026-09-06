@@ -1043,31 +1043,24 @@
 
         // TAMBAHKAN FUNGSI FILTER INI AGAR PENCARIAN & DROPDOWN BERFUNGSI
         function filterData() {
-    const keyword = document.getElementById('searchInput') ? document.getElementById('searchInput').value.toLowerCase() : "";
-    const selectedFilterWR = document.getElementById('filterWR') ? document.getElementById('filterWR').value : "";
+            const keyword = document.getElementById('searchInput').value.toLowerCase();
+            const selectedFilterWR = document.getElementById('filterWR').value;
 
-    const dataTersaring = semuaDataFasilitas.filter(item => {
-        // Amankan agar tidak crash jika datanya kosong/angka
-        const nama = (item.nama || "").toLowerCase();
-        const unit = (item.unit || "").toLowerCase();
-        const fasilitas = (item.fasilitas || "").toLowerCase();
-        const keperluan = (item.keperluan || "").toLowerCase();
-        const bidang = String(item.bidangWR || "");
+            dataTersaring = semuaDataFasilitas.filter(item => {
+                const matchKeyword = 
+                    (item.nama && item.nama.toLowerCase().includes(keyword)) ||
+                    (item.unit && item.unit.toLowerCase().includes(keyword)) ||
+                    (item.fasilitas && item.fasilitas.toLowerCase().includes(keyword)) ||
+                    (item.keperluan && item.keperluan.toLowerCase().includes(keyword));
 
-        const matchKeyword = nama.includes(keyword) || 
-                             unit.includes(keyword) || 
-                             fasilitas.includes(keyword) || 
-                             keperluan.includes(keyword);
+                const matchWR = selectedFilterWR === "" || (item.bidangWR && item.bidangWR.toLowerCase() === selectedFilterWR.toLowerCase());
 
-        const matchWR = selectedFilterWR === "" || bidang === selectedFilterWR;
+                return matchKeyword && matchWR;
+            });
 
-        return matchKeyword && matchWR;
-    });
-
-    // Panggil fungsi tampilkan tabel Anda
-    if (typeof tampilkanTabel === "function") {
-        tampilkanTabel(dataTersaring);
-    }
+            halamanAktif = 1;
+            tampilkanTabel();
+        }
 
         function tampilkanTabel() {
             const tbody = document.getElementById('tableBody');
