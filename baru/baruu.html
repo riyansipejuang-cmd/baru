@@ -490,6 +490,10 @@
 
         .footer-info { font-size: 12px; color: #94a3b8; }
         .footer-bottom { border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 10px; font-size: 11px; color: #64748b; }
+		
+		.badge-pending { background-color: #fff3cd; color: #664d03; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-block; margin: 2px 0; }
+		.badge-success { background-color: #d1e7dd; color: #0f5132; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-block; margin: 2px 0; }
+		.badge-rejected { background-color: #f8d7da; color: #842029; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-block; margin: 2px 0; }
     </style>
 </head>
 <body>
@@ -892,23 +896,47 @@
             const akhir = Math.min(awal + barisPerHalaman, totalData);
             const dataHalamanIni = dataTersaring.slice(awal, akhir);
 
-            dataHalamanIni.forEach(item => {
-                let statusHtml = `<span class="badge-acc">Disetujui Utama</span>`;
-                if(item.berkasLink && item.berkasLink.startsWith("http")) {
-                    statusHtml += `<br><small><a href="${item.berkasLink}" target="_blank" style="color:var(--secondary); font-weight:600;">Lihat Berkas &rarr;</a></small>`;
-                }
+           dataHalamanIni.forEach(item => {
+    // 1. Fungsi pembantu untuk membuat badge status per WR
+    function getStatusBadge(status) {
+        if (status === 'Disetujui' || status === 'ACC') {
+            return `<span class="badge-success"><i class="fa-solid fa-check"></i> Sudah ACC</span>`;
+        } else if (status === 'Ditolak') {
+            return `<span class="badge-rejected"><i class="fa-solid fa-xmark"></i> Ditolak</span>`;
+        } else {
+            return `<span class="badge-pending"><i class="fa-solid fa-clock"></i> Menunggu</span>`;
+        }
+    }
 
-                var tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><b>${item.fasilitas || '-'}</b><br><small style="color:var(--text-muted);">${item.keperluan || ''}</small></td>
-                    <td>${item.nama || '-'}<br><small style="color:var(--text-muted);">(${item.unit || '-'})</small></td>
-                    <td>${item.tglMulai || '-'} s/d ${item.tglSelesai || '-'}</td>
-                    <td><span class="badge-wr">${item.bidangWR || '-'}</span></td>
-                    <td>${statusHtml}<br><small style="color:var(--text-muted);">Multi: ${item.multiApproval || '-'}</small></td>
-                `;
-                tbody.appendChild(tr);
-            });
+    // 2. Menyusun tampilan status multi-approval Wakil Rektor
+    let multiApprovalHtml = `
+        <div style="font-size: 12px; line-height: 1.5;">
+            <div><b>WR 1:</b> ${getStatusBadge(item.accWr1)}</div>
+            <div><b>WR 2:</b> ${getStatusBadge(item.accWr2)}</div>
+            <div><b>WR 3:</b> ${getStatusBadge(item.accWr3)}</div>
+        </div>
+    `;
 
+    // 3. Tambahkan link berkas jika diperlukan (opsional, misal jika sudah lengkap atau ada linknya)
+    let berkasHtml = '';
+    if (item.berkasLink && item.berkasLink.startsWith("http")) {
+        berkasHtml = `<br><small><a href="${item.berkasLink}" target="_blank" style="color:var(--secondary); font-weight:600; text-decoration:none;"><i class="fa-solid fa-paperclip"></i> Lihat Berkas</a></small>`;
+    }
+
+    // 4. Memasukkannya ke dalam elemen baris tabel (tr)
+    var tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td><b>${item.fasilitas || '-'}</b><br><small style="color:var(--text-muted);">${item.keperluan || ''}</small></td>
+        <td>${item.nama || '-'}<br><small style="color:var(--text-muted);">(${item.unit || '-'})</small></td>
+        <td>${item.tglMulai || '-'} s/d ${item.tglSelesai || '-'}</td>
+        <td><span class="badge-wr">${item.bidangWR || '-'}</span></td>
+        <td>
+            ${multiApprovalHtml}
+            ${berkasHtml}
+        </td>
+    `;
+    tbody.appendChild(tr);
+});
             pageInfo.innerText = `Menampilkan ${awal + 1}-${akhir} dari ${totalData} data (Halaman ${halamanAktif}/${totalHalaman})`;
             prevBtn.disabled = halamanAktif === 1;
             nextBtn.disabled = halamanAktif === totalHalaman;
