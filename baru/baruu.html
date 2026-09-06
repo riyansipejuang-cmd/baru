@@ -823,7 +823,7 @@
     </footer>
 
     <script>
-		const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbi5Vfasty5fP_fWPQaYnO0WXE8ZyH28LNv3ewGnbyGRa3pNY5x8J4my6/exec";
+		const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwG21ppp2MNR-16NgmI3FQai8g5yYWSOb__8UZR-zPpqP1ynTGpODZtfdUL9_HsvWpz9A/exec";
 		let selectedWR = "";
         
         let semuaDataFasilitas = [];
@@ -1043,24 +1043,31 @@
 
         // TAMBAHKAN FUNGSI FILTER INI AGAR PENCARIAN & DROPDOWN BERFUNGSI
         function filterData() {
-            const keyword = document.getElementById('searchInput').value.toLowerCase();
-            const selectedFilterWR = document.getElementById('filterWR').value;
+    const keyword = document.getElementById('searchInput') ? document.getElementById('searchInput').value.toLowerCase() : "";
+    const selectedFilterWR = document.getElementById('filterWR') ? document.getElementById('filterWR').value : "";
 
-            dataTersaring = semuaDataFasilitas.filter(item => {
-                const matchKeyword = 
-                    (item.nama && item.nama.toLowerCase().includes(keyword)) ||
-                    (item.unit && item.unit.toLowerCase().includes(keyword)) ||
-                    (item.fasilitas && item.fasilitas.toLowerCase().includes(keyword)) ||
-                    (item.keperluan && item.keperluan.toLowerCase().includes(keyword));
+    const dataTersaring = semuaDataFasilitas.filter(item => {
+        // Amankan agar tidak crash jika datanya kosong/angka
+        const nama = (item.nama || "").toLowerCase();
+        const unit = (item.unit || "").toLowerCase();
+        const fasilitas = (item.fasilitas || "").toLowerCase();
+        const keperluan = (item.keperluan || "").toLowerCase();
+        const bidang = String(item.bidangWR || "");
 
-                const matchWR = selectedFilterWR === "" || (item.bidangWR && item.bidangWR.toLowerCase() === selectedFilterWR.toLowerCase());
+        const matchKeyword = nama.includes(keyword) || 
+                             unit.includes(keyword) || 
+                             fasilitas.includes(keyword) || 
+                             keperluan.includes(keyword);
 
-                return matchKeyword && matchWR;
-            });
+        const matchWR = selectedFilterWR === "" || bidang === selectedFilterWR;
 
-            halamanAktif = 1;
-            tampilkanTabel();
-        }
+        return matchKeyword && matchWR;
+    });
+
+    // Panggil fungsi tampilkan tabel Anda
+    if (typeof tampilkanTabel === "function") {
+        tampilkanTabel(dataTersaring);
+    }
 
         function tampilkanTabel() {
             const tbody = document.getElementById('tableBody');
