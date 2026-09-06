@@ -899,8 +899,8 @@
            dataHalamanIni.forEach(item => {
     // 1. Fungsi pembantu untuk membuat badge status per WR
     function getStatusBadge(status) {
-        if (status === 'Disetujui' || status === 'ACC') {
-            return `<span class="badge-success"><i class="fa-solid fa-check"></i> Sudah ACC</span>`;
+        if (status === 'Disetujui' || status === 'Disetujui') {
+            return `<span class="badge-success"><i class="fa-solid fa-check"></i> Disetujui</span>`;
         } else if (status === 'Ditolak') {
             return `<span class="badge-rejected"><i class="fa-solid fa-xmark"></i> Ditolak</span>`;
         } else {
