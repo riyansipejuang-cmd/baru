@@ -823,8 +823,8 @@
     </footer>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxfyHQKLDBHkkjj7hvSJ6_2E8joosaudB29t-LJyKDllOZSKooZIC0fndyckzQXjTnSXw/exec";
-        let selectedWR = "";
+		const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbi5Vfasty5fP_fWPQaYnO0WXE8ZyH28LNv3ewGnbyGRa3pNY5x8J4my6/exec";
+		let selectedWR = "";
         
         let semuaDataFasilitas = [];
         let dataTersaring = [];
@@ -937,7 +937,7 @@
             prosedurWrapper.style.display = 'block';
         }
 
-		const form = document.getElementById('peminjamanForm');
+        const form = document.getElementById('peminjamanForm');
         const responseMessage = document.getElementById('responseMessage');
         const submitBtn = document.getElementById('submitBtn');
 
@@ -953,51 +953,49 @@
 
             function kirimData(fileData = null, fileName = null, fileMimeType = null) {
                const checkboxes = document.querySelectorAll('input[name="multiApproval"]:checked');
-            let multiApprovalList = [];
-            checkboxes.forEach((cb) => multiApprovalList.push(cb.value));
+               let multiApprovalList = [];
+               checkboxes.forEach((cb) => multiApprovalList.push(cb.value));
 
-            var formData = {
-                nama: document.getElementById('nama').value,
-                nim: document.getElementById('nim').value,
-                unit: document.getElementById('unit').value,
-                fasilitas: document.getElementById('fasilitas').value,
-                tglMulai: document.getElementById('tglMulai').value,
-                tglSelesai: document.getElementById('tglSelesai').value,
-                keperluan: document.getElementById('keperluan').value,
-                tujuan: document.getElementById('tujuan').value,
-                multiApproval: multiApprovalList.join(", "),
-                fileData: fileData,
-                fileName: fileName,
-                fileMimeType: fileMimeType
-            };
+               var formData = {
+                   nama: document.getElementById('nama').value,
+                   nim: document.getElementById('nim').value,
+                   unit: document.getElementById('unit').value,
+                   fasilitas: document.getElementById('fasilitas').value,
+                   tglMulai: document.getElementById('tglMulai').value,
+                   tglSelesai: document.getElementById('tglSelesai').value,
+                   keperluan: document.getElementById('keperluan').value,
+                   tujuan: document.getElementById('tujuan').value,
+                   multiApproval: multiApprovalList.join(", "),
+                   fileData: fileData,
+                   fileName: fileName,
+                   fileMimeType: fileMimeType
+               };
 
-            // Gunakan pendekatan tanpa mode 'no-cors' agar respons dari Apps Script bisa dibaca
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify(formData)
-            })
-            .then(response => response.json())
-            .then(result => {
-                if(result.result === "success") {
-                    responseMessage.style.color = "#16a34a";
-                    responseMessage.innerText = "Pengajuan & berkas berhasil dikirim!";
-                    form.reset();
-                } else {
-                    responseMessage.style.color = "#dc2626";
-                    responseMessage.innerText = "Gagal dari Server: " + result.message;
-                }
-                submitBtn.disabled = false;
-                submitBtn.innerText = "Kirim Pengajuan Resmi";
-            })
-            .catch(error => {
-                responseMessage.style.color = "#dc2626";
-                responseMessage.innerText = "Terjadi kesalahan jaringan atau izin Script.";
-                submitBtn.disabled = false;
-                submitBtn.innerText = "Kirim Pengajuan Resmi";
-            });
+               fetch(SCRIPT_URL, {
+                   method: 'POST',
+                   body: JSON.stringify(formData)
+               })
+               .then(response => response.json())
+               .then(result => {
+                   if(result.result === "success") {
+                       responseMessage.style.color = "#16a34a";
+                       responseMessage.innerText = "Pengajuan & berkas berhasil dikirim!";
+                       form.reset();
+                   } else {
+                       responseMessage.style.color = "#dc2626";
+                       responseMessage.innerText = "Gagal dari Server: " + result.message;
+                   }
+                   submitBtn.disabled = false;
+                   submitBtn.innerText = "Kirim Pengajuan Resmi";
+               })
+               .catch(error => {
+                   responseMessage.style.color = "#dc2626";
+                   responseMessage.innerText = "Terjadi kesalahan jaringan atau izin Script.";
+                   submitBtn.disabled = false;
+                   submitBtn.innerText = "Kirim Pengajuan Resmi";
+               });
             }
 
-            // Jika ada file yang di-upload, baca dulu menggunakan FileReader
             if (file) {
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
@@ -1011,23 +1009,57 @@
                     submitBtn.innerText = "Kirim Pengajuan Resmi";
                 };
             } else {
-                kirimData(); // Kirim tanpa file jika kosong
+                kirimData();
             }
         });
-		
 		function loadDaftarAcc() {
-            const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center;">Memuat data status...</td></tr>`;
+    const tbody = document.getElementById('tableBody');
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center;">Memuat data status...</td></tr>`;
 
-            fetch(SCRIPT_URL)
-            .then(response => response.json())
-            .then(data => {
-                semuaDataFasilitas = Array.isArray(data) ? data : [];
-                filterData();
-            })
-            .catch(error => {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #dc2626;">Gagal memuat data dari server.</td></tr>`;
+    fetch(SCRIPT_URL)
+    .then(response => {
+        // Cek apakah server merespons dengan sukses (status 200)
+        if (!response.ok) {
+            throw new Error("HTTP error! status: " + response.status);
+        }
+        return response.text(); // Ambil sebagai teks dulu untuk melihat isinya
+    })
+    .then(text => {
+        try {
+            const data = JSON.parse(text); // Coba ubah ke JSON
+            semuaDataFasilitas = Array.isArray(data) ? data : [];
+            filterData();
+        } catch (e) {
+            // Jika yang dikirim bukan JSON (misal halaman HTML login Google)
+            console.error("Bukan JSON:", text);
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #dc2626;">Error: Server mengembalikan HTML/Teks, bukan JSON. Cek izin Deploy!</td></tr>`;
+        }
+    })
+    .catch(error => {
+        console.error("Fetch Error:", error);
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #dc2626;">Gagal: ${error.message}</td></tr>`;
+    });
+}
+
+        // TAMBAHKAN FUNGSI FILTER INI AGAR PENCARIAN & DROPDOWN BERFUNGSI
+        function filterData() {
+            const keyword = document.getElementById('searchInput').value.toLowerCase();
+            const selectedFilterWR = document.getElementById('filterWR').value;
+
+            dataTersaring = semuaDataFasilitas.filter(item => {
+                const matchKeyword = 
+                    (item.nama && item.nama.toLowerCase().includes(keyword)) ||
+                    (item.unit && item.unit.toLowerCase().includes(keyword)) ||
+                    (item.fasilitas && item.fasilitas.toLowerCase().includes(keyword)) ||
+                    (item.keperluan && item.keperluan.toLowerCase().includes(keyword));
+
+                const matchWR = selectedFilterWR === "" || (item.bidangWR && item.bidangWR.toLowerCase() === selectedFilterWR.toLowerCase());
+
+                return matchKeyword && matchWR;
             });
+
+            halamanAktif = 1;
+            tampilkanTabel();
         }
 
         function tampilkanTabel() {
@@ -1064,9 +1096,7 @@
                     statusHtml += `<br><small><a href="${item.berkasLink}" target="_blank" style="color:var(--secondary); font-weight:600;">Lihat Berkas &rarr;</a></small>`;
                 }
 
-                if(item.multiApproval && item.multiApproval.trim() !== "") {
-                    statusHtml += `<br><small style="color:var(--text-muted); margin-top:3px; display:inline-block;">+ Paraf Tambahan: <b>${item.multiApproval}</b></small>`;
-                }
+     // ... kode tabel lainnya tetap sama ...
 
                 var tr = document.createElement('tr');
                 tr.innerHTML = `
