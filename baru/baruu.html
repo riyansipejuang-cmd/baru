@@ -774,7 +774,7 @@
         <p class="section-desc">Pantau status verifikasi dan persetujuan dari masing-masing bidang pimpinan:</p>
         
         <div class="table-toolbar">
-            <input type="text" id="searchInput" placeholder="Cari peminjam, unit, atau fasilitas..." onkeyup="filterData()">
+            <input type="text" id="searchInput" placeholder="Cari pengajuan..." oninput="filterData()">
             <select id="filterWR" onchange="filterData()">
                 <option value="">Semua Bidang Utama</option>
                 <option value="WR I">Wakil Rektor I</option>
@@ -819,7 +819,7 @@
     </footer>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwUPQMfKcz4_5KHLkK1g3kjbumtyu_cJXTma54_bxA6WtSzuDqKdFYgzwLNyIcFhx5dCQ/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyt8CU1_7ShLhDNma-RVRnGsUxY9hpbMYp4QNC66Dv0jDQhi49Ynau4a5SU-kdCy7lWhQ/exec";
         let selectedWR = "";
         let semuaDataFasilitas = [];
         let dataTersaring = [];
@@ -1016,9 +1016,11 @@
             dataTersaring = semuaDataFasilitas.filter(item => {
                 const matchKeyword = 
                     (item.nama && item.nama.toLowerCase().includes(keyword)) ||
+                    (item.nim && item.nim.toLowerCase().includes(keyword)) ||
                     (item.unit && item.unit.toLowerCase().includes(keyword)) ||
                     (item.fasilitas && item.fasilitas.toLowerCase().includes(keyword)) ||
-                    (item.keperluan && item.keperluan.toLowerCase().includes(keyword));
+                    (item.keperluan && item.keperluan.toLowerCase().includes(keyword)) ||
+                    (item.multiApproval && item.multiApproval.toLowerCase().includes(keyword));
 
                 const matchWR = selectedFilterWR === "" || (item.bidangWR && item.bidangWR.toLowerCase() === selectedFilterWR.toLowerCase());
                 return matchKeyword && matchWR;
