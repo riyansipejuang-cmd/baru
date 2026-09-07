@@ -714,19 +714,19 @@
             <form id="peminjamanForm">
                 <div class="form-group">
                     <label>Nama Lengkap:</label>
-                    <input type="text" id="nama" required placeholder="Masukkan nama lengkap">
+                    <input type="text" id="nama" required>
                 </div>
                 <div class="form-group">
                     <label>Nomor Induk (NIM / NIP):</label>
-                    <input type="text" id="nim" required placeholder="Contoh: 210102001">
+                    <input type="text" id="nim" required>
                 </div>
                 <div class="form-group">
                     <label>Asal Organisasi / Unit / Fakultas:</label>
-                    <input type="text" id="unit" required placeholder="Contoh: Fakultas Teknik">
+                    <input type="text" id="unit" required>
                 </div>
                 <div class="form-group">
                     <label>Prihal Pengajuan:</label>
-                    <input type="text" id="fasilitas" required placeholder="Contoh: Pengajuan Dana">
+                    <input type="text" id="fasilitas" required>
                 </div>
                 
                 <div class="form-row">
@@ -748,7 +748,7 @@
                 </div>
                 <div class="form-group">
                     <label>Keperluan / Deskripsi Pengajuan (Sertakan Jam jika setengah hari):</label>
-                    <input type="text" id="keperluan" required placeholder="Contoh: Seminar Nasional (Pukul 08.00 - 12.00 WIT)">
+                    <input type="text" id="keperluan" required>
                 </div>
                 <input type="hidden" id="tujuan">
                 <div class="form-group">
@@ -819,9 +819,9 @@
     </footer>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwX0UPOTeCebd8JqHO0-FDq0_5h9GYQBfgQszP1r0mySJIcQvXui60nyOlFsLrHL2tHzw/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzeNj5nGBRYbl-l4iqG3Z4zS7sjEPaK_EhIgDTz8auX3ILxYGTkSsImUZqMXAkTk0QqbQ/exec";
         let selectedWR = "";
-        let semuaDataFasilitas = []
+        let semuaDataFasilitas = [];
         let dataTersaring = [];
         let halamanAktif = 1;
         const barisPerHalaman = 4;
