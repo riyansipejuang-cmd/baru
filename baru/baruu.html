@@ -706,7 +706,7 @@
     </footer>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzH5-t0tyKmFB3jXPZ1gNwWyOYsqZj6bEPtXjdQGWeNTTuQ8zMJ-b0gWUyw2ImLXafhtQ/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyt8CU1_7ShLhDNma-RVRnGsUxY9hpbMYp4QNC66Dv0jDQhi49Ynau4a5SU-kdCy7lWhQ/exec";
         let selectedWR = "";
         let semuaDataFasilitas = [];
         let dataTersaring = [];
@@ -895,6 +895,7 @@
             const awal = (halamanAktif - 1) * barisPerHalaman;
             const akhir = Math.min(awal + barisPerHalaman, totalData);
             const dataHalamanIni = dataTersaring.slice(awal, akhir);
+			
 			dataHalamanIni.forEach(item => {
     function getStatusBadge(status) {
         if (status === 'Disetujui') {
@@ -906,13 +907,28 @@
         }
     }
 
-    // Menyusun tampilan status multi-approval dari WR 1 sampai WR 4
+    // Ambil string centang dari database (misal: "WR 1, WR 3")
+    let targetList = item.multiApproval ? item.multiApproval.split(",").map(s => s.trim()) : [];
+    let approvalRowsHtml = "";
+
+    // Hanya tampilkan WR yang ada di dalam list centang
+    targetList.forEach(wr => {
+        let statusVal = "Menunggu";
+        if (wr === "WR 1") statusVal = item.statusWr1;
+        else if (wr === "WR 2") statusVal = item.statusWr2;
+        else if (wr === "WR 3") statusVal = item.statusWr3;
+        else if (wr === "WR 4") statusVal = item.statusWr4;
+
+        approvalRowsHtml += `<div><b>${wr}:</b> ${getStatusBadge(statusVal)}</div>`;
+    });
+
+    if (approvalRowsHtml === "") {
+        approvalRowsHtml = `<span style="color:var(--text-muted); font-size:11px;">Tidak ada multi-approval</span>`;
+    }
+
     let multiApprovalHtml = `
         <div style="font-size: 12px; line-height: 1.5;">
-            <div><b>WR 1:</b> ${getStatusBadge(item.accWr1)}</div>
-            <div><b>WR 2:</b> ${getStatusBadge(item.accWr2)}</div>
-            <div><b>WR 3:</b> ${getStatusBadge(item.accWr3)}</div>
-            <div><b>WR 4:</b> ${getStatusBadge(item.accWr4)}</div>
+            ${approvalRowsHtml}
         </div>
     `;
 
