@@ -635,7 +635,7 @@
         <p class="section-desc">Kenali jajaran pimpinan universitas yang membawahi bidang akademik, aset, kemahasiswaan, dan Kemuhammadiyahan:</p>
         <div class="profil-grid">
             <div class="profil-card">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="WR I" class="profil-foto">
+                <img src="wr1.jpg" alt="WR I" class="profil-foto">
                 <div class="profil-info">
                     <h3>Mukhlas Triono, M.Pd.</h3>
                     <div class="jabatan">Wakil Rektor Bidang Akademik (WR I)</div>
@@ -643,7 +643,7 @@
                 </div>
             </div>
             <div class="profil-card">
-                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80" alt="WR II" class="profil-foto">
+                <img src="wr2.jpg" alt="WR II" class="profil-foto">
                 <div class="profil-info">
                     <h3>Surya Putra Raharja, M.Pd.</h3>
                     <div class="jabatan">Wakil Rektor Bidang Aset & Keuangan (WR II)</div>
@@ -651,7 +651,7 @@
                 </div>
             </div>
             <div class="profil-card">
-                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80" alt="WR III" class="profil-foto">
+                <img src="wr3.jpg" alt="WR III" class="profil-foto">
                 <div class="profil-info">
                     <h3>Aldilla Yulia Sutikno, M.Pd</h3>
                     <div class="jabatan">Wakil Rektor Bidang Kemahasiswaan (WR III)</div>
@@ -659,7 +659,7 @@
                 </div>
             </div>
             <div class="profil-card">
-                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&q=80" alt="WR IV" class="profil-foto">
+                <img src="wr4.jpg" alt="WR IV" class="profil-foto">
                 <div class="profil-info">
                     <h3>Jusmin, M.Ec.Dev</h3>
                     <div class="jabatan">Wakil Rektor Bidang SDM & Kemuhammadiyahan (WR IV)</div>
@@ -839,10 +839,9 @@
         function gantiHalaman(pageId) {
             document.querySelectorAll('.page-section').forEach(page => page.classList.remove('active-page'));
             document.getElementById(pageId).classList.add('active-page');
-            
             document.querySelectorAll('.navbar nav a').forEach(a => a.classList.remove('active-nav'));
             if(pageId === 'profil-page') document.getElementById('nav-profil').classList.add('active-nav');
-            if(pageId === 'form-page') document.getElementById('nav-form').classList.add('active-nav');
+            if(pageId === 'form-page') document.getElementById('nav-form').classList.add('active-nav');				
             if(pageId === 'status-page') document.getElementById('nav-status').classList.add('active-nav');
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -860,10 +859,10 @@
         }, 4500);
 
         const dataProsedur = {
-            "WR I": { title: "Panduan - Wakil Rektor I", html: "<ul><li>Unit pengusul atau kaprodi membuat draf/proposal pengajuan (misalnya terkait revisi kurikulum, izin riset, atau penggunaan laboratorium terpadu).</li><li>Dokumen diajukan melalui Ketua Program Studi atau Dekan Fakultas terlebih dahulu untuk mendapatkan validasi dan paraf persetujuan awal.</li><li>Berkas diserahkan ke bagian administrasi akademik untuk diverifikasi kesesuaiannya dengan aturan akademik yang berlaku.</li><li>Dokumen diteruskan ke WR I untuk ditinjau dan disahkan (disetujui/dikeluarkan SK).</li></ul>" },
-            "WR II": { title: "Panduan - Wakil Rektor II", html: "<ul><li>Menyusun surat permohonan resmi atau Rencana Anggaran Biaya (RAB) jika menyangkut penggunaan dana dan pengadaan/peminjaman fasilitas infrastruktur.</li><li>Meminta rekomendasi atau persetujuan dari unsur pimpinan unit/fakultas asal.</li><li>Mengajukan surat ke bagian Biro Keuangan dan Aset untuk pengecekan ketersediaan anggaran, inventaris, atau jadwal peminjaman gedung/infrastruktur.</li><li>Berkas diajukan ke WR II untuk mendapatkan disposisi dan persetujuan akhir pencairan dana atau izin penggunaan aset.</li></ul>" },
+            "WR I": { title: "Panduan - Wakil Rektor I", html: "<ul><li>Unit pengusul atau kaprodi membuat draf/proposal pengajuan (misalnya terkait revisi kurikulum, izin riset, atau penggunaan laboratorium terpadu).</li><li>Dokumen diajukan melalui Ketua Program Studi atau Dekan Fakultas terlebih dahulu untuk mendapatkan validasi dan paraf persetujuan awal.</li><li>Berkas diserahkan atau di upload di formulir bagian administrasi akademik untuk diverifikasi kesesuaiannya dengan aturan akademik yang berlaku.</li><li>Dokumen diteruskan ke WR I untuk ditinjau dan disahkan (disetujui/dikeluarkan SK).</li></ul>" },
+            "WR II": { title: "Panduan - Wakil Rektor II", html: "<ul><li>Menyusun surat permohonan resmi atau Rencana Anggaran Biaya (RAB) jika menyangkut penggunaan dana dan pengadaan/peminjaman fasilitas infrastruktur.</li><li>Meminta rekomendasi atau persetujuan dari unsur pimpinan unit/fakultas asal.</li><li>Untuh HIMPUNAN wajib melampirkan keterangan dari pihak kemahasiswaan.</li><li>Berkas diajukan ke WR II untuk mendapatkan disposisi dan persetujuan akhir pencairan dana atau izin penggunaan aset.</li></ul>" },
             "WR III": { title: "Panduan - Wakil Rektor III", html: "<ul><li>Organisasi mahasiswa, UKM, atau perorangan menyusun proposal kegiatan/pembinaan prestasi beserta estimasi kebutuhan dana.</li><li>Proposal wajib disetujui oleh Pembina Ormawa/UKM dan diketahui oleh pejabat kemahasiswaan di tingkat fakultas.</li><li>Proposal diserahkan ke Biro Kemahasiswaan untuk direviu kesesuaian program kerja dan kelengkapan administrasinya.</li><li>Diajukan kepada WR III untuk mendapatkan pengesahan kegiatan serta rekomendasi pencairan dana ke bagian keuangan (WR II).</li></ul>" },
-            "WR IV": { title: "Panduan - Wakil Rektor IV", html: "<ul><li>Membuat draf dokumen kerja sama, nota kesepahaman (MoU/MoA), atau surat pengajuan urusan kepegawaian/kemitraan.</li><li>Melakukan koordinasi awal dengan unit terkait (misalnya bagian kepegawaian atau kantor urusan internasional/kemitraan).</li><li>Mengajukan berkas kepada WR IV untuk ditinjau substansi kerja sama strategis atau urusan instansinya.</li><li>Setelah disetujui WR IV, dokumen diproses untuk penandatanganan resmi atau tindak lanjut kelembagaan.</li></ul>" }
+            "WR IV": { title: "Panduan - Wakil Rektor IV", html: "<ul><li>Membuat draf dokumen kerja sama, nota kesepahaman (MoU/MoA), atau surat pengajuan urusan kepegawaian/kemitraan.</li><li>Melakukan koordinasi awal dengan unit terkait (SDM).</li><li>Mengajukan berkas kepada WR IV untuk ditinjau substansi kerja sama strategis atau urusan instansinya.</li><li>Setelah disetujui WR IV, dokumen diproses untuk penandatanganan resmi atau tindak lanjut.</li></ul>" }
         };
 
         function tampilkanProsedur(jenisWR) {
