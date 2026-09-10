@@ -6,14 +6,14 @@
     <title>Sistem Peminjaman Fasilitas Kampus - Portal Wakil Rektor</title>
     <style>
         :root {
-            --primary: #1e293b;
-            --secondary: #0f172a;
-            --accent: #ff8c00;
+            --primary: #0f2b46;     /* Biru Navy Utama */
+            --secondary: #1d4ed8;   /* Biru Terang / Aksen */
+            --accent: #3b82f6;      /* Biru Pelengkap */
             --bg-light: #ffffff;
-            --bg-main: #f8fafc;
-            --text-dark: #0f172a;
+            --bg-main: #f0f4f8;     /* Abu-abu kebiruan sangat lembut */
+            --text-dark: #1e293b;
             --text-muted: #64748b;
-            --border: #e2e8f0;
+            --border: #cbd5e1;
             --radius: 8px;
         }
 
@@ -21,7 +21,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         }
 
         body {
@@ -31,6 +31,7 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            font-size: 11pt;
         }
 
         .navbar {
@@ -40,7 +41,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 4px rgba(15, 43, 70, 0.05);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -56,12 +57,12 @@
         .logo-icon {
             width: 36px;
             height: 36px;
-            background: linear-gradient(135deg, #ffa500 0%, #ff7700 100%);
+            background: linear-gradient(135deg, #0f2b46, #1d4ed8);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 6px rgba(255, 140, 0, 0.2);
+            box-shadow: 0 2px 6px rgba(15, 43, 70, 0.2);
             border: 2px solid #ffffff;
             color: #ffffff;
             font-size: 15px;
@@ -75,7 +76,7 @@
         }
 
         .logo span {
-            color: var(--accent);
+            color: var(--secondary);
         }
 
         .menu-toggle {
@@ -115,7 +116,7 @@
         }
 
         .navbar nav a:hover, .navbar nav a.active-nav {
-            color: var(--accent);
+            color: var(--secondary);
             font-weight: 600;
         }
 
@@ -125,7 +126,7 @@
             text-align: center;
             height: 220px;
             overflow: hidden;
-            background-color: #f1f5f9;
+            background-color: #cbd5e1;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -154,7 +155,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.85));
+            background: linear-gradient(rgba(15, 43, 70, 0.8), rgba(29, 78, 216, 0.85));
             z-index: 2;
         }
 
@@ -175,7 +176,7 @@
 
         .hero-content p {
             font-size: 13px;
-            color: #cbd5e1;
+            color: #e2e8f0;
         }
 
         .container {
@@ -184,7 +185,7 @@
             background: white;
             padding: 24px;
             border-radius: var(--radius);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            box-shadow: 0 2px 4px rgba(15, 43, 70, 0.05);
             border: 1px solid var(--border);
             flex: 1;
             width: 95%;
@@ -195,7 +196,7 @@
             color: var(--primary);
             font-size: 18px;
             font-weight: 700;
-            border-bottom: 2px solid var(--accent);
+            border-bottom: 2px solid var(--secondary);
             padding-bottom: 8px;
         }
 
@@ -228,12 +229,13 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(15, 43, 70, 0.02);
         }
 
         .wr-card:hover {
-            border-color: var(--accent);
+            border-color: var(--secondary);
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(15, 23, 42, 0.06);
+            box-shadow: 0 6px 15px rgba(29, 78, 216, 0.1);
         }
 
         .wr-card h3 {
@@ -250,7 +252,7 @@
         }
 
         .btn-pilih {
-            background: var(--primary);
+            background: var(--secondary);
             color: white;
             border: none;
             padding: 7px 12px;
@@ -303,7 +305,7 @@
         }
 
         .btn-lanjut { background: #16a34a; }
-        .back-prosedur { background: #64748b; }
+        .back-prosedur { background: var(--text-muted); }
 
         #form-wrapper {
             display: none;
@@ -343,8 +345,8 @@
         }
 
         .form-group input:focus, .form-group select:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.1);
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1);
         }
 
         .form-group input[type="file"] {
@@ -379,14 +381,14 @@
             color: var(--text-muted);
             margin-top: 6px;
             line-height: 1.4;
-            background: #f1f5f9;
+            background: #e0f2fe;
             padding: 8px 10px;
             border-radius: 4px;
-            border-left: 3px solid var(--accent);
+            border-left: 3px solid var(--secondary);
         }
 
         button[type="submit"] {
-            background: var(--accent);
+            background: var(--primary);
             color: white;
             border: none;
             padding: 11px;
@@ -400,7 +402,7 @@
         }
 
         button[type="submit"]:hover {
-            background: #e67e00;
+            background: var(--secondary);
         }
 
         .profil-grid {
@@ -418,6 +420,7 @@
             display: flex;
             gap: 14px;
             align-items: flex-start;
+            box-shadow: 0 2px 4px rgba(15, 43, 70, 0.02);
         }
 
         .profil-foto {
@@ -439,7 +442,7 @@
         .profil-info .jabatan {
             font-size: 10px;
             font-weight: 600;
-            color: var(--accent);
+            color: var(--secondary);
             margin-bottom: 4px;
             text-transform: uppercase;
         }
@@ -464,6 +467,7 @@
             border-radius: 6px;
             font-size: 12px;
             outline: none;
+            background: #fff;
         }
 
         .table-toolbar input { flex: 1; min-width: 180px; }
@@ -486,11 +490,16 @@
             padding: 10px 12px;
             text-align: left;
             font-size: 11px;
+            border-right: 1px solid var(--border);
+        }
+
+        th:last-child, td:last-child {
+            border-right: none;
         }
 
         th {
-            background-color: #f1f5f9;
-            color: var(--primary);
+            background-color: var(--primary);
+            color: white;
             font-weight: 700;
             text-transform: uppercase;
             font-size: 10px;
@@ -499,7 +508,7 @@
         }
 
         tr:nth-child(even) { background-color: var(--bg-main); }
-        tr:hover { background-color: #f8fafc; }
+        tr:hover { background-color: #f1f5f9; }
 
         .badge-wr {
             background-color: #e2e8f0;
@@ -563,9 +572,9 @@
         .footer-info { font-size: 11px; color: var(--text-muted); }
         .footer-bottom { border-top: 1px solid var(--border); padding-top: 8px; margin-top: 4px; font-size: 10px; color: var(--text-muted); }
         
-        .badge-pending { background-color: #fff3cd; color: #664d03; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; display: inline-block; margin: 2px 0; }
-        .badge-success { background-color: #d1e7dd; color: #0f5132; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; display: inline-block; margin: 2px 0; }
-        .badge-rejected { background-color: #f8d7da; color: #842029; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; display: inline-block; margin: 2px 0; }
+        .badge-pending { background-color: #fef9c3; color: #854d0e; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; display: inline-block; margin: 2px 0; }
+        .badge-success { background-color: #dcfce7; color: #166534; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; display: inline-block; margin: 2px 0; }
+        .badge-rejected { background-color: #fee2e2; color: #991b1b; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; display: inline-block; margin: 2px 0; }
 
         @media (max-width: 768px) {
             .menu-toggle { display: flex; }
@@ -588,7 +597,7 @@
                 padding: 10px 20px;
                 width: 100%;
                 text-align: left;
-                border-bottom: 1px solid #f1f5f9;
+                border-bottom: 1px solid var(--border);
             }
             .navbar nav a:last-child { border-bottom: none; }
             .container { margin: 12px auto; padding: 16px; width: 96%; }
@@ -717,7 +726,7 @@
                     <input type="text" id="nama" required>
                 </div>
                 <div class="form-group">
-                    <label>Nomor Induk (NIM / NIP):</label>
+                    <label>Nomor WhatsApp:</label>
                     <input type="text" id="nim" required>
                 </div>
                 <div class="form-group">
@@ -819,7 +828,7 @@
     </footer>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzeNj5nGBRYbl-l4iqG3Z4zS7sjEPaK_EhIgDTz8auX3ILxYGTkSsImUZqMXAkTk0QqbQ/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxMIL8hcjY4V_eaGDhL6UuKIsFBc5a0IOYe07lN9wUUU0pz21EzhGj5dwq79KiYVj6s/exec";
         let selectedWR = "";
         let semuaDataFasilitas = [];
         let dataTersaring = [];
@@ -1145,6 +1154,18 @@
             halamanAktif += arah;
             tampilkanTabel();
         }
+		
+		function ubahHalaman(arah) {
+            halamanAktif += arah;
+            tampilkanTabel();
+        }
+
+        // Tambahkan di sini (bagian paling bawah sebelum </script>)
+        setInterval(function() {
+            if (document.getElementById('status-page').classList.contains('active-page')) {
+                loadDaftarAcc();
+            }
+        }, 20000);
     </script>
 </body>
 </html>
