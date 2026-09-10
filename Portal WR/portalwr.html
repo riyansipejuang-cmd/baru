@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Peminjaman Fasilitas Kampus - Portal Wakil Rektor</title>
+    <style>
+        :root {
+            --primary: #0f2b46;     /* Biru Navy Utama */
+            --secondary: #1d4ed8;   /* Biru Terang / Aksen */
+            --accent: #3b82f6;      /* Biru Pelengkap */
+            --bg-light: #ffffff;
+            --bg-main: #f0f4f8;     /* Abu-abu kebiruan sangat lembut */
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border: #cbd5e1;
+            --radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            font-size: 11pt;
+        }
+
+        .navbar {
+            background: #ffffff;
+            color: var(--text-dark);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(15, 43, 70, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #0f2b46, #1d4ed8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(15, 43, 70, 0.2);
+            border: 2px solid #ffffff;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 900;
+        }
+
+        .logo {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo span {
+            color: var(--secondary);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 24px;
+            height: 18px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .menu-toggle span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar nav {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+            font-size: 13px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .navbar nav a:hover, .navbar nav a.active-nav {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .hero {
+            position: relative;
+            color: white;
+            text-align: center;
+            height: 220px;
+            overflow: hidden;
+            background-color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+            z-index: 1;
+        }
+
+        .hero-slide.active {
+            opacity: 1;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(15, 43, 70, 0.8), rgba(29, 78, 216, 0.85));
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        .hero-content h1 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #ffffff;
+            line-height: 1.4;
+        }
+
+        .hero-content p {
+            font-size: 13px;
+            color: #e2e8f0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            background: white;
+            padding: 24px;
+            border-radius: var(--radius);
+            box-shadow: 0 2px 4px rgba(15, 43, 70, 0.05);
+            border: 1px solid var(--border);
+            flex: 1;
+            width: 95%;
+        }
+
+        .container h2 {
+            margin-bottom: 6px;
+            color: var(--primary);
+            font-size: 18px;
+            font-weight: 700;
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 8px;
+        }
+
+        .section-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .page-section {
+            display: none;
+        }
+
+        .page-section.active-page {
+            display: block;
+        }
+
+        .wr-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .wr-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(15, 43, 70, 0.02);
+        }
+
+        .wr-card:hover {
+            border-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(29, 78, 216, 0.1);
+        }
+
+        .wr-card h3 {
+            color: var(--primary);
+            font-size: 15px;
+            margin-bottom: 6px;
+        }
+
+        .wr-card p {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .btn-pilih {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 7px 12px;
+            font-size: 11px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        #prosedur-wrapper {
+            display: none;
+            margin-top: 16px;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+        }
+
+        .prosedur-box h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .prosedur-box ul {
+            margin-left: 18px;
+            margin-bottom: 16px;
+            font-size: 12px;
+        }
+
+        .prosedur-box li {
+            margin-bottom: 6px;
+        }
+
+        .btn-aksi-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .btn-lanjut, .back-prosedur {
+            border: none;
+            padding: 8px 14px;
+            font-size: 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            color: white;
+        }
+
+        .btn-lanjut { background: #16a34a; }
+        .back-prosedur { background: var(--text-muted); }
+
+        #form-wrapper {
+            display: none;
+            margin-top: 16px;
+            border-top: 1px dashed var(--border);
+            padding-top: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 12px;
+            color: var(--text-dark);
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+            background-color: #fff;
+            color: var(--text-dark);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1);
+        }
+
+        .form-group input[type="file"] {
+            padding: 6px;
+            background: var(--bg-main);
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .multi-wr-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 8px;
+            background: var(--bg-main);
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin-top: 4px;
+        }
+
+        .multi-wr-container label {
+            font-weight: normal;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .form-note {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 6px;
+            line-height: 1.4;
+            background: #e0f2fe;
+            padding: 8px 10px;
+            border-radius: 4px;
+            border-left: 3px solid var(--secondary);
+        }
+
+        button[type="submit"] {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 11px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 8px;
+            transition: background 0.2s;
+        }
+
+        button[type="submit"]:hover {
+            background: var(--secondary);
+        }
+
+        .profil-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .profil-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px;
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            box-shadow: 0 2px 4px rgba(15, 43, 70, 0.02);
+        }
+
+        .profil-foto {
+            width: 65px;
+            height: 80px;
+            border-radius: 6px;
+            object-fit: cover;
+            border: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .profil-info h3 {
+            font-size: 13px;
+            color: var(--primary);
+            margin-bottom: 2px;
+            font-weight: 700;
+        }
+
+        .profil-info .jabatan {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .profil-info p {
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.3;
+        }
+
+        .table-toolbar {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        .table-toolbar input, .table-toolbar select {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 12px;
+            outline: none;
+            background: #fff;
+        }
+
+        .table-toolbar input { flex: 1; min-width: 180px; }
+
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            white-space: nowrap;
+        }
+
+        th, td {
+            padding: 10px 12px;
+            text-align: left;
+            font-size: 11px;
+            border-right: 1px solid var(--border);
+        }
+
+        th:last-child, td:last-child {
+            border-right: none;
+        }
+
+        th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        tr:nth-child(even) { background-color: var(--bg-main); }
+        tr:hover { background-color: #f1f5f9; }
+
+        .badge-wr {
+            background-color: #e2e8f0;
+            color: var(--primary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: 600;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 14px;
+            font-size: 11px;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .pagination-buttons button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            margin-left: 4px;
+        }
+
+        .pagination-buttons button:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        footer {
+            background-color: #ffffff;
+            color: var(--text-muted);
+            padding: 20px;
+            margin-top: auto;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .footer-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .footer-info { font-size: 11px; color: var(--text-muted); }
+        .footer-bottom { border-top: 1px solid var(--border); padding-top: 8px; margin-top: 4px; font-size: 10px; color: var(--text-muted); }
+        
+        .badge-pending { background-color: #fef9c3; color: #854d0e; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; display: inline-block; margin: 2px 0; }
+        .badge-success { background-color: #dcfce7; color: #166534; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; display: inline-block; margin: 2px 0; }
+        .badge-rejected { background-color: #fee2e2; color: #991b1b; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; display: inline-block; margin: 2px 0; }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
+            .navbar { padding: 10px 16px; }
+            .navbar nav {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: white;
+                box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+                border-top: 1px solid var(--border);
+                padding: 10px 0;
+            }
+            .navbar nav.mobile-active { display: flex; }
+            .navbar nav a {
+                margin: 0;
+                padding: 10px 20px;
+                width: 100%;
+                text-align: left;
+                border-bottom: 1px solid var(--border);
+            }
+            .navbar nav a:last-child { border-bottom: none; }
+            .container { margin: 12px auto; padding: 16px; width: 96%; }
+            .hero { height: 180px; }
+            .hero-content h1 { font-size: 16px; }
+            .hero-content p { font-size: 11px; }
+            .form-row { grid-template-columns: 1fr; gap: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo-container">
+            <div class="logo-icon">WR</div>
+            <div class="logo">PORTAL<span>WR</span></div>
+        </div>
+        <button class="menu-toggle" onclick="toggleMobileMenu()" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <nav id="navMenu">
+            <a onclick="gantiHalaman('profil-page'); closeMenu();" id="nav-profil" class="active-nav">Profil Pimpinan</a>
+            <a onclick="gantiHalaman('form-page'); closeMenu();" id="nav-form">Ajukan Pengajuan</a>
+            <a onclick="gantiHalaman('status-page'); closeMenu();" id="nav-status">Daftar Status ACC</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-slide active" style="background-image: url('oke.jpg');"></div>
+        <div class="hero-slide" style="background-image: url('oke1.jpg');"></div>
+        <div class="hero-slide" style="background-image: url('oke2.jpg');"></div>
+        <div class="hero-slide" style="background-image: url('oke3.jpg');"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>Layanan Pengajuan Kampus Universitas Pendidikan Muhammadiyah Sorong</h1>
+            <p>Sistem Terpadu Bidang Wakil Rektor</p>
+        </div>
+    </section>
+
+    <div id="profil-page" class="container page-section active-page">
+        <h2>Profil & Biografi Pimpinan Wakil Rektor</h2>
+        <p class="section-desc">Kenali jajaran pimpinan universitas yang membawahi bidang akademik, aset, kemahasiswaan, dan Kemuhammadiyahan:</p>
+        <div class="profil-grid">
+            <div class="profil-card">
+                <img src="wr1.jpg" alt="WR I" class="profil-foto">
+                <div class="profil-info">
+                    <h3>Mukhlas Triono, M.Pd.</h3>
+                    <div class="jabatan">Wakil Rektor Bidang Akademik (WR I)</div>
+                    <p><b>Fokus Utama:</b> Kurikulum, Sistem Pembelajaran, Riset, & Laboratorium Terpadu.</p>
+                </div>
+            </div>
+            <div class="profil-card">
+                <img src="wr2.jpg" alt="WR II" class="profil-foto">
+                <div class="profil-info">
+                    <h3>Surya Putra Raharja, M.Pd.</h3>
+                    <div class="jabatan">Wakil Rektor Bidang Aset & Keuangan (WR II)</div>
+                    <p><b>Fokus Utama:</b> Manajemen Aset, Gedung Serbaguna, & Infrastruktur Kampus.</p>
+                </div>
+            </div>
+            <div class="profil-card">
+                <img src="wr3.jpg" alt="WR III" class="profil-foto">
+                <div class="profil-info">
+                    <h3>Aldilla Yulia Sutikno, M.Pd</h3>
+                    <div class="jabatan">Wakil Rektor Bidang Kemahasiswaan (WR III)</div>
+                    <p><b>Fokus Utama:</b> Pembinaan Organisasi Mahasiswa, UKM, & Prestasi.</p>
+                </div>
+            </div>
+            <div class="profil-card">
+                <img src="wr4.jpg" alt="WR IV" class="profil-foto">
+                <div class="profil-info">
+                    <h3>Jusmin, M.Ec.Dev</h3>
+                    <div class="jabatan">Wakil Rektor Bidang SDM & Kemuhammadiyahan (WR IV)</div>
+                    <p><b>Fokus Utama:</b> Kemitraan Strategis, Hubungan Industri, & Tamu Instansi.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="form-page" class="container page-section">
+        <h2>Pilih Prosedur & Bidang Pengajuan</h2>
+        <p class="section-desc">Silakan pilih bidang Wakil Rektor utama untuk melihat panduan:</p>
+        
+        <div class="wr-grid">
+            <div class="wr-card" onclick="tampilkanProsedur('WR I')">
+                <h3>Wakil Rektor I</h3>
+                <p>Kurikulum, Sistem Pembelajaran, Riset, & Laboratorium Terpadu.</p>
+                <button class="btn-pilih">Lihat Prosedur</button>
+            </div>
+            <div class="wr-card" onclick="tampilkanProsedur('WR II')">
+                <h3>Wakil Rektor II</h3>
+                <p>Manajemen Aset, Gedung Serbaguna, & Infrastruktur Kampus.</p>
+                <button class="btn-pilih">Lihat Prosedur</button>
+            </div>
+            <div class="wr-card" onclick="tampilkanProsedur('WR III')">
+                <h3>Wakil Rektor III</h3>
+                <p>Pembinaan Organisasi Mahasiswa, UKM, & Prestasi.</p>
+                <button class="btn-pilih">Lihat Prosedur</button>
+            </div>
+            <div class="wr-card" onclick="tampilkanProsedur('WR IV')">
+                <h3>Wakil Rektor IV</h3>
+                <p>Kemitraan Strategis, Hubungan Industri, & Tamu Instansi.</p>
+                <button class="btn-pilih">Lihat Prosedur</button>
+            </div>
+        </div>
+
+        <div id="prosedur-wrapper">
+            <div class="prosedur-box">
+                <h3 id="prosedur-title">Panduan & Prosedur Peminjaman</h3>
+                <div id="prosedur-content"></div>
+                <div class="btn-aksi-group">
+                    <button type="button" class="back-prosedur" onclick="kembaliKePilihanWR()">← Kembali</button>
+                    <button type="button" class="btn-lanjut" onclick="lanjutKeForm()">Lanjutkan ke Formulir →</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="form-wrapper">
+            <button type="button" class="back-prosedur" onclick="kembaliKeProsedur()" style="margin-bottom: 14px;">← Kembali ke Panduan</button>
+            <h3 id="form-title" style="color: var(--primary); margin-bottom: 14px; font-size: 15px; font-weight: 700;">Formulir Pengajuan</h3>
+            
+            <form id="peminjamanForm">
+                <div class="form-group">
+                    <label>Nama Lengkap:</label>
+                    <input type="text" id="nama" required>
+                </div>
+                <div class="form-group">
+                    <label>Nomor WhatsApp:</label>
+                    <input type="text" id="nim" required>
+                </div>
+                <div class="form-group">
+                    <label>Asal Organisasi / Unit / Fakultas:</label>
+                    <input type="text" id="unit" required>
+                </div>
+                <div class="form-group">
+                    <label>Prihal Pengajuan:</label>
+                    <input type="text" id="fasilitas" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tanggal Mulai:</label>
+                        <input type="date" id="tglMulai" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal Selesai <span style="font-weight: normal; color: var(--text-muted);">(Opsional)</span>:</label>
+                        <input type="date" id="tglSelesai">
+                        <small style="font-size: 10px; color: var(--text-muted); display: block; margin-top: 3px;">Kosongkan jika kegiatan berlangsung 1 hari penuh.</small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Dokumen / Proposal Pendukung (PDF / Gambar):</label>
+                    <input type="file" id="berkasPendukung" accept=".pdf, .jpg, .jpeg, .png">
+                    <small style="font-size: 10px; color: var(--text-muted); display: block; margin-top: 3px;">Format: PDF, JPG, PNG (Maks. 5MB)</small>
+                </div>
+                <div class="form-group">
+                    <label>Keperluan / Deskripsi Pengajuan (Sertakan Jam jika setengah hari):</label>
+                    <input type="text" id="keperluan" required>
+                </div>
+                <input type="hidden" id="tujuan">
+                <div class="form-group">
+                    <label>Pilih Wakil Rektor Tujuan & Persetujuan Tambahan (Multi-Approval):</label>
+                    <div class="multi-wr-container">
+                        <label><input type="checkbox" name="multiApproval" value="WR I"> Wakil Rektor I</label>
+                        <label><input type="checkbox" name="multiApproval" value="WR II"> Wakil Rektor II</label>
+                        <label><input type="checkbox" name="multiApproval" value="WR III"> Wakil Rektor III</label>
+                        <label><input type="checkbox" name="multiApproval" value="WR IV"> Wakil Rektor IV</label>
+                    </div>
+                    <div class="form-note">
+                        <b>Catatan:</b> Bidang Wakil Rektor utama telah otomatis terdeteksi berdasarkan prosedur yang Anda pilih sebelumnya. Centang kotak di atas <b>hanya jika</b> pengajuan ini memerlukan tembusan atau verifikasi lanjutan lintas bidang pimpinan terkait.
+                    </div>
+                </div>
+                <button type="submit" id="submitBtn">Kirim Pengajuan Resmi</button>
+            </form>
+            <p id="responseMessage" style="margin-top: 10px; font-weight: 600; text-align: center; font-size: 12px;"></p>
+        </div>
+    </div>
+
+    <div id="status-page" class="container page-section">
+        <h2>Daftar Status Pengajuan & Persetujuan (Multi-Approval)</h2>
+        <p class="section-desc">Pantau status verifikasi dan persetujuan dari masing-masing bidang pimpinan:</p>
+        
+        <div class="table-toolbar">
+            <input type="text" id="searchInput" placeholder="Cari pengajuan..." oninput="filterData()">
+            <select id="filterWR" onchange="filterData()">
+                <option value="">Semua Bidang Utama</option>
+                <option value="WR I">Wakil Rektor I</option>
+                <option value="WR II">Wakil Rektor II</option>
+                <option value="WR III">Wakil Rektor III</option>
+                <option value="WR IV">Wakil Rektor IV</option>
+            </select>
+        </div>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Prihal Pengajuan</th>
+                        <th>Pengaju (Unit)</th>
+                        <th>Durasi Tanggal</th>
+                        <th>Bidang Utama</th>
+                        <th>Status & Berkas</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr><td colspan="5" style="text-align: center;">Memuat data...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination">
+            <span id="pageInfo">Menampilkan 0 dari 0 data</span>
+            <div class="pagination-buttons">
+                <button id="prevBtn" onclick="ubahHalaman(-1)">Sebelumnya</button>
+                <button id="nextBtn" onclick="ubahHalaman(1)">Selanjutnya</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-title">Portal Wakil Rektor - Sistem Pengajuan Terpadu</div>
+            <div class="footer-info">Jl. KH. Ahmad Dahlan No.01, Mariyat Pantai, Aimas, Kabupaten Sorong, Papua Barat - 98418</div>
+            <div class="footer-bottom">2026 Universitas Muhammadiyah Sorong.</div>
+        </div>
+    </footer>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyeJlPrzl8u2eTt7e_TWL4bZN5o0cjfUVuLrwiqc9nhuRdfeAb6xSj5R8SUz-9ltZ3y-g/exec";
+        let selectedWR = "";
+        let semuaDataFasilitas = [];
+        let dataTersaring = [];
+        let halamanAktif = 1;
+        const barisPerHalaman = 4;
+
+        function toggleMobileMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('mobile-active');
+        }
+
+        function closeMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.remove('mobile-active');
+        }
+
+        function gantiHalaman(pageId) {
+            document.querySelectorAll('.page-section').forEach(page => page.classList.remove('active-page'));
+            document.getElementById(pageId).classList.add('active-page');
+            document.querySelectorAll('.navbar nav a').forEach(a => a.classList.remove('active-nav'));
+            if(pageId === 'profil-page') document.getElementById('nav-profil').classList.add('active-nav');
+            if(pageId === 'form-page') document.getElementById('nav-form').classList.add('active-nav');				
+            if(pageId === 'status-page') document.getElementById('nav-status').classList.add('active-nav');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if(pageId === 'status-page') loadDaftarAcc();
+        }
+
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.hero-slide');
+        setInterval(() => {
+            if (slides.length > 0) {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }
+        }, 4500);
+
+        const dataProsedur = {
+            "WR I": { title: "Panduan - Wakil Rektor I", html: "<ul><li>Unit pengusul atau kaprodi membuat draf/proposal pengajuan (misalnya terkait revisi kurikulum, izin riset, atau penggunaan laboratorium terpadu).</li><li>Dokumen diajukan melalui Ketua Program Studi atau Dekan Fakultas terlebih dahulu untuk mendapatkan validasi dan paraf persetujuan awal.</li><li>Berkas diserahkan atau di upload di formulir bagian administrasi akademik untuk diverifikasi kesesuaiannya dengan aturan akademik yang berlaku.</li><li>Dokumen diteruskan ke WR I untuk ditinjau dan disahkan (disetujui/dikeluarkan SK).</li></ul>" },
+            "WR II": { title: "Panduan - Wakil Rektor II", html: "<ul><li>Menyusun surat permohonan resmi atau Rencana Anggaran Biaya (RAB) jika menyangkut penggunaan dana dan pengadaan/peminjaman fasilitas infrastruktur.</li><li>Meminta rekomendasi atau persetujuan dari unsur pimpinan unit/fakultas asal.</li><li>Untuh HIMPUNAN wajib melampirkan keterangan dari pihak kemahasiswaan.</li><li>Berkas diajukan ke WR II untuk mendapatkan disposisi dan persetujuan akhir pencairan dana atau izin penggunaan aset.</li></ul>" },
+            "WR III": { title: "Panduan - Wakil Rektor III", html: "<ul><li>Organisasi mahasiswa, UKM, atau perorangan menyusun proposal kegiatan/pembinaan prestasi beserta estimasi kebutuhan dana.</li><li>Proposal wajib disetujui oleh Pembina Ormawa/UKM dan diketahui oleh pejabat kemahasiswaan di tingkat fakultas.</li><li>Proposal diserahkan ke Biro Kemahasiswaan untuk direviu kesesuaian program kerja dan kelengkapan administrasinya.</li><li>Diajukan kepada WR III untuk mendapatkan pengesahan kegiatan serta rekomendasi pencairan dana ke bagian keuangan (WR II).</li></ul>" },
+            "WR IV": { title: "Panduan - Wakil Rektor IV", html: "<ul><li>Membuat draf dokumen kerja sama, nota kesepahaman (MoU/MoA), atau surat pengajuan urusan kepegawaian/kemitraan.</li><li>Melakukan koordinasi awal dengan unit terkait (SDM).</li><li>Mengajukan berkas kepada WR IV untuk ditinjau substansi kerja sama strategis atau urusan instansinya.</li><li>Setelah disetujui WR IV, dokumen diproses untuk penandatanganan resmi atau tindak lanjut.</li></ul>" }
+        };
+
+        function tampilkanProsedur(jenisWR) {
+            selectedWR = jenisWR;
+            document.querySelector('.wr-grid').style.display = 'none';
+            document.getElementById('prosedur-wrapper').style.display = 'block';
+            document.getElementById('prosedur-title').innerText = dataProsedur[jenisWR].title;
+            document.getElementById('prosedur-content').innerHTML = dataProsedur[jenisWR].html;
+            document.getElementById('tujuan').value = jenisWR;
+        }
+
+        function kembaliKePilihanWR() {
+            document.getElementById('prosedur-wrapper').style.display = 'none';
+            document.querySelector('.wr-grid').style.display = 'grid';
+        }
+
+        function lanjutKeForm() {
+            document.getElementById('prosedur-wrapper').style.display = 'none';
+            document.getElementById('form-wrapper').style.display = 'block';
+            document.getElementById('form-title').innerText = "Formulir Pengajuan Utama: " + selectedWR;
+            
+            const checkboxes = document.querySelectorAll('input[name="multiApproval"]');
+            checkboxes.forEach(cb => {
+                if (cb.value === selectedWR) {
+                    cb.checked = true;
+                }
+            });
+        }
+
+        function kembaliKeProsedur() {
+            document.getElementById('form-wrapper').style.display = 'none';
+            document.getElementById('prosedur-wrapper').style.display = 'block';
+        }
+
+        const form = document.getElementById('peminjamanForm');
+        const responseMessage = document.getElementById('responseMessage');
+        const submitBtn = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Mengunggah Berkas & Mengirim...";
+            responseMessage.style.color = "var(--primary)";
+            responseMessage.innerText = "Memproses data...";
+
+            const fileInput = document.getElementById('berkasPendukung');
+            const file = fileInput.files[0];
+
+            function kirimData(fileData = null, fileName = null, fileMimeType = null) {
+                const checkboxes = document.querySelectorAll('input[name="multiApproval"]:checked');
+                let multiApprovalList = [];
+                checkboxes.forEach((cb) => multiApprovalList.push(cb.value));
+
+                if (multiApprovalList.length === 0) {
+                    alert("Silakan pilih minimal satu Wakil Rektor pada bagian persetujuan!");
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "Kirim Pengajuan Resmi";
+                    responseMessage.innerText = "";
+                    return;
+                }
+
+                let mainWR = document.getElementById('tujuan').value;
+                if (mainWR && !multiApprovalList.includes(mainWR)) {
+                    multiApprovalList.unshift(mainWR);
+                }
+
+                let primaryWR = multiApprovalList[0];
+                
+                let tglMulaiVal = document.getElementById('tglMulai').value;
+                let tglSelesaiVal = document.getElementById('tglSelesai').value;
+                if (!tglSelesaiVal) {
+                    tglSelesaiVal = tglMulaiVal;
+                }
+
+                var formData = {
+                    nama: document.getElementById('nama').value,
+                    wa: document.getElementById('wa').value,
+                    unit: document.getElementById('unit').value,
+                    fasilitas: document.getElementById('fasilitas').value,
+                    tglMulai: tglMulaiVal,
+                    tglSelesai: tglSelesaiVal,
+                    keperluan: document.getElementById('keperluan').value,
+                    tujuan: primaryWR,
+                    multiApproval: multiApprovalList.join(", "),
+                    fileData: fileData,
+                    fileName: fileName,
+                    fileMimeType: fileMimeType
+                };
+
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(formData)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if(result.result === "success") {
+                        responseMessage.style.color = "#16a34a";
+                        responseMessage.innerText = "Pengajuan & berkas berhasil dikirim!";
+                        form.reset();
+                    } else {
+                        responseMessage.style.color = "#dc2626";
+                        responseMessage.innerText = "Gagal dari Server: " + result.message;
+                    }
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "Kirim Pengajuan Resmi";
+                })
+                .catch(error => {
+                    responseMessage.style.color = "#dc2626";
+                    responseMessage.innerText = "Terjadi kesalahan jaringan.";
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "Kirim Pengajuan Resmi";
+                });
+            }
+
+            if (file) {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function () {
+                    kirimData(reader.result, file.name, file.type);
+                };
+                reader.onerror = function () {
+                    alert("Gagal membaca file.");
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "Kirim Pengajuan Resmi";
+                };
+            } else {
+                kirimData();
+            }
+        });
+
+        function loadDaftarAcc() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center;">Memuat data status...</td></tr>`;
+
+            fetch(SCRIPT_URL)
+            .then(response => response.json())
+            .then(data => {
+                semuaDataFasilitas = Array.isArray(data) ? data : [];
+                filterData();
+            })
+            .catch(error => {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #dc2626;">Gagal memuat data dari server.</td></tr>`;
+            });
+        }
+
+        function filterData() {
+            const keyword = document.getElementById('searchInput').value.toLowerCase();
+            const selectedFilterWR = document.getElementById('filterWR').value;
+
+            dataTersaring = semuaDataFasilitas.filter(item => {
+                const matchKeyword = 
+                    (item.nama && item.nama.toLowerCase().includes(keyword)) ||
+                    (item.nim && item.nim.toLowerCase().includes(keyword)) ||
+                    (item.unit && item.unit.toLowerCase().includes(keyword)) ||
+                    (item.fasilitas && item.fasilitas.toLowerCase().includes(keyword)) ||
+                    (item.keperluan && item.keperluan.toLowerCase().includes(keyword)) ||
+                    (item.multiApproval && item.multiApproval.toLowerCase().includes(keyword));
+
+                const matchWR = selectedFilterWR === "" || (item.bidangWR && item.bidangWR.toLowerCase() === selectedFilterWR.toLowerCase());
+                return matchKeyword && matchWR;
+            });
+
+            halamanAktif = 1;
+            tampilkanTabel();
+        }
+
+        function formatTanggalIndo(dateString) {
+            if (!dateString) return '-';
+            let cleanDate = dateString.split('T')[0];
+            let parts = cleanDate.split('-');
+            if (parts.length !== 3) return dateString;
+
+            let tahun = parts[0];
+            let bulanAngka = parseInt(parts[1], 10);
+            let tanggal = parseInt(parts[2], 10);
+
+            const namaBulan = [
+                "", "Januari", "Februari", "Maret", "April", "Mei", "Juni", 
+                "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+            ];
+
+            if (bulanAngka >= 1 && bulanAngka <= 12) {
+                return `${tanggal} ${namaBulan[bulanAngka]} ${tahun}`;
+            }
+            return cleanDate;
+        }
+
+        function tampilkanTabel() {
+            const tbody = document.getElementById('tableBody');
+            const pageInfo = document.getElementById('pageInfo');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            tbody.innerHTML = "";
+
+            if(dataTersaring.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center;">Tidak ada data pengajuan ditemukan.</td></tr>`;
+                pageInfo.innerText = "Menampilkan 0 dari 0 data";
+                prevBtn.disabled = true;
+                nextBtn.disabled = true;
+                return;
+            }
+
+            const totalData = dataTersaring.length;
+            const totalHalaman = Math.ceil(totalData / barisPerHalaman);
+            if(halamanAktif > totalHalaman) halamanAktif = totalHalaman;
+            if(halamanAktif < 1) halamanAktif = 1;
+
+            const awal = (halamanAktif - 1) * barisPerHalaman;
+            const akhir = Math.min(awal + barisPerHalaman, totalData);
+            const dataHalamanIni = dataTersaring.slice(awal, akhir);
+            
+            dataHalamanIni.forEach(item => {
+                function getStatusBadge(status) {
+                    if (status === 'Disetujui') {
+                        return `<span class="badge-success">Disetujui</span>`;
+                    } else if (status === 'Ditolak') {
+                        return `<span class="badge-rejected">Ditolak</span>`;
+                    } else {
+                        return `<span class="badge-pending">Menunggu</span>`;
+                    }
+                }
+
+                let targetList = item.multiApproval ? item.multiApproval.split(",").map(s => s.trim()) : [];
+                if (item.bidangWR && !targetList.includes(item.bidangWR)) {
+                    targetList.unshift(item.bidangWR);
+                }
+
+                let approvalRowsHtml = "";
+
+                targetList.forEach(wr => {
+                    let statusVal = "Menunggu";
+                    if (wr === "WR I") statusVal = item.statusWr1;
+                    else if (wr === "WR II") statusVal = item.statusWr2;
+                    else if (wr === "WR III") statusVal = item.statusWr3;
+                    else if (wr === "WR IV") statusVal = item.statusWr4;
+
+                    approvalRowsHtml += `<div><b>${wr}:</b> ${getStatusBadge(statusVal)}</div>`;
+                });
+
+                if (approvalRowsHtml === "") {
+                    approvalRowsHtml = `<span style="color:var(--text-muted); font-size:10px;">Tidak ada multi-approval</span>`;
+                }
+
+                let multiApprovalHtml = `<div style="font-size: 11px; line-height: 1.4;">${approvalRowsHtml}</div>`;
+
+                let berkasHtml = '';
+                if (item.berkasLink && item.berkasLink.startsWith("http")) {
+                    berkasHtml = `<br><small><a href="${item.berkasLink}" target="_blank" style="color:var(--secondary); font-weight:600; text-decoration:none;">Lihat Berkas</a></small>`;
+                }
+
+                let tglMulaiFormatted = formatTanggalIndo(item.tglMulai);
+                let tglSelesaiFormatted = formatTanggalIndo(item.tglSelesai);
+                
+                let durasiTampil = tglMulaiFormatted;
+                if (item.tglSelesai && item.tglSelesai !== item.tglMulai) {
+                    durasiTampil += ` s/d ${tglSelesaiFormatted}`;
+                }
+
+                var tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><b>${item.fasilitas || '-'}</b><br><small style="color:var(--text-muted);">${item.keperluan || ''}</small></td>
+                    <td>${item.nama || '-'}<br><small style="color:var(--text-muted);">(${item.unit || '-'})</small></td>
+                    <td>${durasiTampil}</td>
+                    <td><span class="badge-wr">${item.bidangWR || '-'}</span></td>
+                    <td>
+                        ${multiApprovalHtml}
+                        ${berkasHtml}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            pageInfo.innerText = `Menampilkan ${awal + 1}-${akhir} dari ${totalData} data (Halaman ${halamanAktif}/${totalHalaman})`;
+            prevBtn.disabled = halamanAktif === 1;
+            nextBtn.disabled = halamanAktif === totalHalaman;
+        }
+
+        function ubahHalaman(arah) {
+            halamanAktif += arah;
+            tampilkanTabel();
+        }
+    </script>
+</body>
+</html>
